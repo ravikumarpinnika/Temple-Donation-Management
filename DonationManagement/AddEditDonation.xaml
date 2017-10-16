@@ -1,0 +1,64 @@
+﻿<Window x:Class="DonationManagement.AddEditDonation"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DonationManagement"
+        mc:Ignorable="d"
+        Title="AddEditDonation" Height="500" Width="500">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="13*"/>
+            <RowDefinition Height="13*"/>
+            <RowDefinition Height="13*"/>
+            <RowDefinition Height="13*"/>
+            <RowDefinition Height="13*"/>
+            <RowDefinition Height="13*"/>
+            <RowDefinition Height="13*"/>
+            <RowDefinition Height="13*"/>
+            <RowDefinition Height="13*"/>
+            <RowDefinition Height="27*"/>
+            <RowDefinition Height="18*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="130*"/>
+            <ColumnDefinition Width="363*"/>
+        </Grid.ColumnDefinitions>
+       
+        <Label Content="SL No:" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Height="26" Width="65"  />
+        <Label Content="Name(Mr/Mrs .):" HorizontalAlignment="Left" Margin="10,0.8,0,0" Grid.Row="2" VerticalAlignment="Top" Height="26" Width="100" Grid.RowSpan="2"/>
+        <Label Content="Email :" HorizontalAlignment="Left" Margin="10,0.8,0,0" Grid.Row="4" VerticalAlignment="Top" Height="26" Width="58" Grid.RowSpan="2"/>
+        <Label Content="Address :" HorizontalAlignment="Left" Margin="10,6.4,0,0" Grid.Row="9" VerticalAlignment="Top" Height="26" Width="58"/>
+        <Label Content="Place :" HorizontalAlignment="Left" Margin="10,2.4,0,0" Grid.Row="5" Grid.RowSpan="2" VerticalAlignment="Top" Height="26" Width="58"/>
+        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="15.6,2,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="327" Grid.RowSpan="2"/>
+        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="15.6,0.8,0,0" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="327" Grid.RowSpan="2"/>
+        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="15.6,0.8,0,0" Grid.Row="4" TextWrapping="Wrap" VerticalAlignment="Top" Width="327" Grid.RowSpan="2"/>
+        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="15.6,0.4,0,0" Grid.Row="5" TextWrapping="Wrap" VerticalAlignment="Top" Width="327" Grid.RowSpan="2"/>
+        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="73" Margin="15.6,0.4,0,0" Grid.Row="9" TextWrapping="Wrap" VerticalAlignment="Top" Width="327" />
+        <Label Content="Date :" HorizontalAlignment="Left" Margin="10,0.4,0,0" Grid.Row="1" VerticalAlignment="Top" Height="26" Grid.RowSpan="2" Width="40"/>
+        <DatePicker Grid.Column="1" HorizontalAlignment="Left" Margin="15.6,1.4,0,0" Grid.Row="1" VerticalAlignment="Top" Width="327" Height="26" Grid.RowSpan="2"/>
+        <Label Content="Payment Type:" HorizontalAlignment="Left" Margin="10,2,0,0" Grid.Row="6" VerticalAlignment="Top" Height="26" Grid.RowSpan="2" Width="88"/>
+        <ComboBox Grid.Column="1" HorizontalAlignment="Left" Margin="15.6,0.8,0,0" Grid.Row="6" VerticalAlignment="Top" Width="327" Height="24">
+            <ComboBoxItem Name="FUND" Content="FUND" IsSelected="True"/>
+            <ComboBoxItem Name="ANNASANTARPANA" Content="ANNASANTARPANA" />
+            <ComboBoxItem Name="BuildingConstruction" Content="Building Construction" />
+            <ComboBoxItem Name="Other" Content="Other" />
+        </ComboBox>
+        <Label Content="Gender:" HorizontalAlignment="Left" Margin="10,0.4,0,0" Grid.Row="3" VerticalAlignment="Top" Height="26" Grid.RowSpan="2" Width="51"/>
+        <RadioButton Content="Male" Grid.Column="1" HorizontalAlignment="Left" Margin="19.6,3.4,0,0" Grid.Row="3" VerticalAlignment="Top" Height="16" Width="43"/>
+        <RadioButton Content="Female" Grid.Column="1" HorizontalAlignment="Left" Margin="69.6,3.4,0,0" Grid.Row="3" VerticalAlignment="Top" RenderTransformOrigin="2.238,0.549" Height="16" Width="53"/>
+        <Label Content="Amount:" HorizontalAlignment="Left" Margin="10,2,0,0" Grid.Row="7" VerticalAlignment="Top" Height="26" Grid.RowSpan="2" Width="56"/>
+        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="24" Margin="15.6,1.4,0,0" Grid.Row="7" TextWrapping="Wrap" VerticalAlignment="Top" Width="159"/>
+        <ComboBox Grid.Column="1" HorizontalAlignment="Left" Margin="179.6,1.4,0,0" Grid.Row="7" VerticalAlignment="Top" Width="163" Height="23">
+            <ComboBoxItem Content="By Cash" IsSelected="True" />
+            <ComboBoxItem Content="DD" />
+            <ComboBoxItem Content="Checkque" />
+            <ComboBoxItem Content="By Bank" />
+            <ComboBoxItem Content="Other" />
+        </ComboBox>
+        <Label Content="NO #" HorizontalAlignment="Left" Margin="10,2,0,0" Grid.Row="8" VerticalAlignment="Top" Height="24" Width="38"/>
+        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="15.6,2,0,0" Grid.Row="8" TextWrapping="Wrap" VerticalAlignment="Top" Width="327"/>
+        <Button Content="Save" Grid.Column="1" HorizontalAlignment="Left" Margin="169.6,9.8,0,0" Grid.Row="10" VerticalAlignment="Top" Width="75"/>
+        <Button Content="Cancel" Grid.Column="1" HorizontalAlignment="Left" Margin="250.6,9.8,0,0" Grid.Row="10" VerticalAlignment="Top" Width="75"/>
+    </Grid>
+</Window>
