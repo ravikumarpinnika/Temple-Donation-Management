@@ -19,7 +19,7 @@ namespace DonationManagement
         ///
         public SQLiteDatabase()
         {
-            dbConnection = @"Data Source=Donations.sqlite;Version=3;";
+            dbConnection = @"Data Source=Donations.db;Version=3;new=False;datetimeformat=CurrentCulture;";
         }
 
         ///
@@ -67,7 +67,7 @@ namespace DonationManagement
             }
             catch (Exception e)
             {
-                
+
             }
             return dt;
         }
@@ -122,15 +122,23 @@ namespace DonationManagement
                 int i = 0;
                 foreach (KeyValuePair<string, string> val in data)
                 {
-                    if(i!=0)
-                    vals += String.Format(" {0} = '{1}',", val.Key.ToString(), val.Value.ToString());
+                    if (i != 0)
+                    {
+                        if (val.Value != "")
+                        {
+                            vals += String.Format(" {0} = '{1}',", val.Key.ToString(), val.Value.ToString());
+
+                        }
+                    }
                     i++;
                 }
+
                 vals = vals.Substring(0, vals.Length - 1);
+
             }
             try
             {
-               // this.ExecuteNonQuery(String.Format("update {0} set {1} where {2};", tableName, vals, where));
+                // this.ExecuteNonQuery(String.Format("update {0} set {1} where {2};", tableName, vals, where));
             }
             catch
             {
@@ -190,8 +198,13 @@ namespace DonationManagement
             Boolean returnCode = true;
             foreach (KeyValuePair<string, string> val in data)
             {
-                columns += String.Format(" {0},", val.Key.ToString());
-                values += String.Format(" '{0}',", val.Value);
+                if (val.Key != "ID")
+                {
+                    if (val.Value != "") {
+                        columns += String.Format(" {0},", val.Key.ToString());
+                        values += String.Format(" '{0}',", val.Value);
+                    }
+                }
             }
             columns = columns.Substring(0, columns.Length - 1);
             values = values.Substring(0, values.Length - 1);
@@ -267,7 +280,7 @@ namespace DonationManagement
             int i = 0;
             foreach (var item in prop)
             {
-                sb.Append(item.Key + " " + GetColumnType(item.Value,i==0?true:false) + ",");
+                sb.Append(item.Key + " " + GetColumnType(item.Value, i == 0 ? true : false) + ",");
                 i++;
             }
             sb.Append(")");
@@ -275,7 +288,7 @@ namespace DonationManagement
             return sb.ToString();
         }
 
-        private string GetColumnType(string Type, bool isPk=false)
+        private string GetColumnType(string Type, bool isPk = false)
         {
             string str = "";
             switch (Type)
@@ -299,7 +312,7 @@ namespace DonationManagement
                     str = "Varchar(200)";
                     break;
             }
-            return isPk? str+" PRIMARY KEY ":str;
+            return isPk ? str + " PRIMARY KEY " : str;
         }
 
         public string CreateSelect(Dictionary<string, string> prop, string tableName)

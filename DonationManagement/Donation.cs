@@ -31,13 +31,13 @@ namespace DonationManagement
     {
         public int ID { get; set; }
         public int ExpenseNo { get; set; }
-        public DateTime Edate { get; set; }
+        public String Edate { get; set; }
         public string Name { get; set; }
         public double Amount { get; set; }
         public string Reason { get; set; }
         public string Comment { get; set; }
-        public DateTime Created { get; set; }
-        public DateTime Modified { get; set; }
+        public string Created { get; set; }
+        public string Modified { get; set; }
         public string CreatedBy { get; set; }
         public string ModifiedBy { get; set; }
     }
@@ -55,5 +55,11 @@ namespace DonationManagement
         public static int ID { get; set; }
         public static string UName { get; set; }
         public static string Role { get; set; }
+    }
+    public class ChartData
+    {
+        public  int ID { get; set; }
+        public  DateTime Date  { get; set; }
+        public  int Amount { get; set; }
     }
 }

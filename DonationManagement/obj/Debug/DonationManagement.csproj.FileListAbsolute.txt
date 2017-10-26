@@ -15,4 +15,7 @@ c:\users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\Donati
 c:\users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\DonationManagement.csproj.GenerateResource.Cache
 c:\users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\DonationManagement.exe
 c:\users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\DonationManagement.pdb
-c:\users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\DonationManagement.csprojResolveAssemblyReference.cache
+C:\Users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\App.baml
+C:\Users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\DonationManagement.csprojResolveAssemblyReference.cache
+C:\Users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\DonationManagement_Content.g.cs
+C:\Users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\bin\Debug\Images\Receipt.png
