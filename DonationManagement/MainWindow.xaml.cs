@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
@@ -13,6 +14,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.DataVisualization.Charting;
 using System.Windows.Data;
 using System.Windows.Documents;
+
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -31,12 +33,15 @@ namespace DonationManagement
         Donation SelectedItem;
         Expense SelectedExpenseItem;
         bool IsExpEdit = false;
+        Utility utility = new Utility();
+        string NextNumber = "";
+        bool pageLoaded;
         public MainWindow()
         {
             InitializeComponent();
             InitializeData();
-            LoadData();
             txtSLNo.IsReadOnly = true;
+            pageLoaded = true;
         }
 
         private void InitializeData()
@@ -63,11 +68,7 @@ namespace DonationManagement
             grdDonations.ItemsSource = lidon;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            AddEditDonation addobj = new AddEditDonation();
-            addobj.Show();
-        }
+
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
@@ -93,7 +94,6 @@ namespace DonationManagement
             string query = db.CreateTable(dic, "Donations");
 
             //Exenses
-
             Expense eobj = new Expense();
             Dictionary<string, string> dicexpense = GetTypeProperties<Expense>(eobj);
             string qry = db.CreateTable(dicexpense, "Expenses");
@@ -107,11 +107,12 @@ namespace DonationManagement
 
         private void btnAddDonation_Click(object sender, RoutedEventArgs e)
         {
-            //  stkAddDonations.Visibility = Visibility.Collapsed;
             splAddDonation.Visibility = Visibility.Visible;
             splDonations.Visibility = Visibility.Collapsed;
             DateTime dt = DateTime.Now;
-            txtSLNo.Text = dt.Year + "" + dt.Month + "" + dt.Day + "" + dt.Hour + "" + dt.Minute + "" + dt.Millisecond.ToString().Substring(0, 2);
+            NextNumber = NextNumber == "" ? utility.GenerateSeq() : NextNumber;//dt.Year + "" + dt.Month + "" + dt.Day + "" + dt.Hour + "" + dt.Minute + "" + dt.Millisecond.ToString().Substring(0, 2);
+            txtSLNo.Text = NextNumber;
+            SelectedItem = null;
         }
 
         private void btnSaveDonation_Click(object sender, RoutedEventArgs e)
@@ -137,6 +138,11 @@ namespace DonationManagement
                     return;
                 }
             }
+            if ((cbFundType.SelectedItem as ComboBoxItem).Content.ToString() != "By Cash")
+            {
+                MessageBox.Show("Please Enter Neft/ DD / Check Number");
+                return;
+            }
             db = new SQLiteDatabase();
             Donation dobj = new Donation();
             dobj.ReceiptNo = Convert.ToInt64(txtSLNo.Text);
@@ -146,12 +152,12 @@ namespace DonationManagement
             dobj.Email = txtEmail.Text;
             dobj.Phone = txtPhone.Text;
             dobj.Place = txtPlace.Text;
-            dobj.FundType = txtFundType.Text;
+            dobj.FundType = cbFundType.Text;
             dobj.Amount = Convert.ToDecimal((!string.IsNullOrWhiteSpace(txtAmount.Text) ? txtAmount.Text : "0"));
             dobj.BTNo = txtBNo.Text;
             dobj.Address = txtAddress.Text;
             dobj.Comment = txtComment.Text;
-            dobj.AmountType = txtByType.Text;
+            dobj.AmountType = cbByType.Text;
             dobj.Place = txtPlace.Text;
             if (IsDonationEdit)
             {
@@ -171,6 +177,7 @@ namespace DonationManagement
                 Dictionary<string, string> dic1 = GetTypePropertyValues<Donation>(dobj);
                 string s = db.Insert("Donations", dic1);
                 db.ExecuteNonQuery(s);
+                NextNumber = "";
             }
 
             splAddDonation.Visibility = Visibility.Collapsed;
@@ -179,6 +186,8 @@ namespace DonationManagement
             IsDonationEdit = false;
             FillDoantionForm(new Donation());
             SelectedItem = null;
+
+
         }
 
         #region MyRegion
@@ -233,8 +242,6 @@ namespace DonationManagement
 
         private void btnSqlSettings_Click(object sender, RoutedEventArgs e)
         {
-
-
             HideStackPanels();
             splQueryeditor.Visibility = Visibility.Visible;
         }
@@ -244,11 +251,6 @@ namespace DonationManagement
             HideStackPanels();
             splDonations.Visibility = Visibility.Visible;
             stkAddDonations.Visibility = Visibility.Visible;
-            //splQueryeditor.Visibility = Visibility.Collapsed;
-            //stkAddDonations.Visibility = Visibility.Visible;
-            //splAddDonation.Visibility = Visibility.Collapsed;
-            //SplExpences.Visibility = Visibility.Collapsed;
-            //SplReport.Visibility = Visibility.Collapsed;
         }
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)
@@ -262,8 +264,10 @@ namespace DonationManagement
                 LoginUser.Role = dtd.Rows[0].Field<string>("Role");
                 LoginGrid.Visibility = Visibility.Collapsed;
                 HideStackPanels();
-                MainGrid.Visibility = Visibility.Visible;       
+                MainGrid.Visibility = Visibility.Visible;
                 stkAddDonations.Visibility = Visibility.Visible;
+                LoadData();
+                btnSqlSettings.IsEnabled = (LoginUser.Role == "Admin" ? true : false);
             }
         }
 
@@ -304,12 +308,12 @@ namespace DonationManagement
             txtEmail.Text = dobj.Email;
             txtPhone.Text = dobj.Phone;
             txtPlace.Text = dobj.Place;
-            txtFundType.SelectedValue = dobj.FundType;
+            cbFundType.SelectedValue = dobj.FundType;
             txtAmount.Text = Convert.ToString(dobj.Amount);
             txtBNo.Text = dobj.BTNo;
             txtAddress.Text = dobj.Address;
             txtComment.Text = dobj.Comment;
-            txtByType.SelectedValue = dobj.AmountType;
+            cbByType.SelectedValue = dobj.AmountType;
             txtPlace.Text = dobj.Place;
         }
 
@@ -397,6 +401,7 @@ namespace DonationManagement
                 MessageBox.Show("Please Enter Correct Date (dd/mm/yyyy)");
                 return;
             }
+
             db = new SQLiteDatabase();
             Expense eobj = new Expense();
             eobj.Amount = Convert.ToDouble(txtExpAmount.Text);
@@ -456,16 +461,13 @@ namespace DonationManagement
             SelectedItem = grdDonations.SelectedItem as Donation;
             if (SelectedItem != null)
             {
-                html = html.Replace("@ReceiptNo@", Convert.ToString(SelectedItem.ReceiptNo)).Replace("@date@", SelectedItem.Ddate).Replace("@Name@", SelectedItem.Name)
-                    .Replace("@AmountWords@", NumberToWords((int)SelectedItem.Amount)).Replace("@DD@", SelectedItem.BTNo).Replace("@Amount@", Convert.ToString(SelectedItem.Amount));
+                html = html.Replace("@ReceiptNo@", Convert.ToString(SelectedItem.ReceiptNo)).Replace("@date@", SelectedItem.Ddate.Substring(0, 11)).Replace("@Name@", SelectedItem.Name)
+                    .Replace("@AmountWords@", NumberToWords((int)SelectedItem.Amount) + " only").Replace("@DD@", SelectedItem.BTNo).Replace("@Amount@", Convert.ToString(SelectedItem.Amount) + "/-");
             }
-            wb.NavigateToString(html);   //   NavigateToString(html);
+            wb.NavigateToString(html);
             sr.Close();
             wb.Navigated += Wb_Navigated;
-            // wb.Document.Pr
-            wb.Width = 500;
-            wb.Height = 600;
-            splAddDonation.Children.Add(wb);
+
         }
 
         private void Wb_Navigated(object sender, NavigationEventArgs e)
@@ -526,12 +528,6 @@ namespace DonationManagement
             return words;
         }
 
-
-
-
-
-
-
         private void GrdExpEditButton_Click(object sender, RoutedEventArgs e)
         {
             SelectedExpenseItem = new Expense();
@@ -567,6 +563,7 @@ namespace DonationManagement
                             MessageBox.Show("Expense deleted");
                             SelectedExpenseItem = null;
                             LoadExpenses();
+                            FillExpenseForm(new Expense());
                         }
                     }
                     break;
@@ -575,6 +572,11 @@ namespace DonationManagement
 
         private void btnRDLoad_Click(object sender, RoutedEventArgs e)
         {
+            if (dpRDFrom.Text == "" || dpRDTo.Text == "")
+            {
+                MessageBox.Show("Please select date");
+                return;
+            }
             db = new SQLiteDatabase();
             string expenseQuery = "Select * from Donations where Created BETWEEN '" + dpRDFrom.Text + " 00:00:00 AM' AND '" + dpRDTo.Text + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtRDName.Text) ? "" : "AND Name Like '%" + txtRDName.Text + "%'") + " ORDER BY Created DESC";
             DataTable dtd = db.GetDataTable(expenseQuery);
@@ -584,8 +586,13 @@ namespace DonationManagement
 
         private void btnRELoad_Click(object sender, RoutedEventArgs e)
         {
+            if (dpREFrom.Text == "" || dpRETo.Text == "")
+            {
+                MessageBox.Show("Please select date");
+                return;
+            }
             db = new SQLiteDatabase();
-            string expenseQuery = "Select * from EXPENSES where Created BETWEEN '" + dpREFrom.Text + " 00:00:00 AM' AND '" + dpRETo.Text + " 11:59:00 PM' "+(string.IsNullOrEmpty(txtREName.Text)?"": "AND Name Like '%"+ txtREName.Text+"%'") +" ORDER BY Created DESC";
+            string expenseQuery = "Select * from EXPENSES where Created BETWEEN '" + dpREFrom.Text + " 00:00:00 AM' AND '" + dpRETo.Text + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtREName.Text) ? "" : "AND Name Like '%" + txtREName.Text + "%'") + " ORDER BY Created DESC";
             DataTable dtd = db.GetDataTable(expenseQuery);
             List<Expense> lidon = dtd.DataTableToList<Expense>();
             grdRepExpenses.ItemsSource = lidon;
@@ -598,14 +605,19 @@ namespace DonationManagement
 
         private void txtREName_TextChanged(object sender, TextChangedEventArgs e)
         {
-            btnRELoad_Click(null,null);
-            
+            btnRELoad_Click(null, null);
+
         }
 
-      
+
 
         private void BtnChart_Click(object sender, RoutedEventArgs e)
         {
+            if (dpRCFrom.Text == "" || dpRCTo.Text == "")
+            {
+                MessageBox.Show("Please select date");
+                return;
+            }
             gdChart.Children.Clear();
             db = new SQLiteDatabase();
             string Query = "Select ID, Edate as Date, Amount from EXPENSES where Created BETWEEN '" + dpRCFrom.Text + " 00:00:00 AM' AND '" + dpRCTo.Text + " 11:59:00 PM' ORDER BY Created DESC";
@@ -617,17 +629,85 @@ namespace DonationManagement
 
             Chart crt = new Chart();
             crt.Margin = new Thickness(0, 0, 0, 0);
-            LineSeries ls = new LineSeries();
+            PieSeries ls = new PieSeries();
             ls.IndependentValuePath = "Date";
             ls.DependentValuePath = "Amount";
             ls.ItemsSource = liexp;
             crt.Series.Add(ls);
-            LineSeries lsd = new LineSeries();
+            PieSeries lsd = new PieSeries();
             lsd.IndependentValuePath = "Date";
             lsd.DependentValuePath = "Amount";
             lsd.ItemsSource = lidon;
             crt.Series.Add(lsd);
             gdChart.Children.Add(crt);
+        }
+
+        private void btnDExpExcel_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                db = new SQLiteDatabase();
+                string expenseQuery = "Select * from Donations where Created BETWEEN '" + dpRDFrom.Text + " 00:00:00 AM' AND '" + dpRDTo.Text + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtRDName.Text) ? "" : "AND Name Like '%" + txtRDName.Text + "%'") + " ORDER BY Created DESC";
+                DataTable dtd = db.GetDataTable(expenseQuery);
+                List<Donation> lidon = dtd.DataTableToList<Donation>();
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                // saveFileDialog.FileName= "Donation" +(new Random(10000)).Next(0, 10000).ToString() + ".csv";
+                //saveFileDialog.Filter ="|*.csv";
+                saveFileDialog.DefaultExt = ".csv";
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    Utility.CreateCSVFromGenericList<Donation>(lidon, saveFileDialog.FileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString());
+            }
+
+        }
+
+        private void btnEExpExcel_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                db = new SQLiteDatabase();
+                string expenseQuery = "Select * from EXPENSES where Created BETWEEN '" + dpREFrom.Text + " 00:00:00 AM' AND '" + dpRETo.Text + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtREName.Text) ? "" : "AND Name Like '%" + txtREName.Text + "%'") + " ORDER BY Created DESC";
+                DataTable dtd = db.GetDataTable(expenseQuery);
+                List<Expense> lidon = dtd.DataTableToList<Expense>();
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                // saveFileDialog.FileName = "Expense" + (new Random(10000)).Next(0,10000).ToString() + ".csv";
+                saveFileDialog.DefaultExt = ".csv";
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    Utility.CreateCSVFromGenericList<Expense>(lidon, saveFileDialog.FileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString());
+            }
+        }
+
+
+        private void cbByType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (pageLoaded)
+            {
+                ComboBoxItem cb = ((sender as ComboBox).SelectedItem as ComboBoxItem);
+                if (cb != null)
+                {
+                    if (cb.Content.ToString() == "By Cash")
+                    {
+                        txtBNo.IsEnabled = false;
+                        lblNo.IsEnabled = false;
+                    }
+                    else
+                    {
+                        txtBNo.IsEnabled = true;
+                        lblNo.IsEnabled = true;
+                    }
+                }
+            }
         }
     }
 }

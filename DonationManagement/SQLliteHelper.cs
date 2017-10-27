@@ -14,6 +14,7 @@ namespace DonationManagement
     {
         String dbConnection;
 
+
         ///
         ///     Default Constructor for SQLiteDatabase Class.
         ///
@@ -56,14 +57,20 @@ namespace DonationManagement
             DataTable dt = new DataTable();
             try
             {
-                SQLiteConnection cnn = new SQLiteConnection(dbConnection);
-                cnn.Open();
-                SQLiteCommand mycommand = new SQLiteCommand(cnn);
-                mycommand.CommandText = sql;
-                SQLiteDataReader reader = mycommand.ExecuteReader();
-                dt.Load(reader);
-                reader.Close();
-                cnn.Close();
+                using (SQLiteConnection cnn = new SQLiteConnection(dbConnection))
+                {
+
+                    cnn.Open();
+                    using (SQLiteCommand mycommand = new SQLiteCommand(sql, cnn))
+                    {
+                        using (SQLiteDataReader reader = mycommand.ExecuteReader())
+                        {
+                            dt.Load(reader);
+                            reader.Close();
+                        }
+                        cnn.Close();
+                    }
+                }
             }
             catch (Exception e)
             {
@@ -78,12 +85,16 @@ namespace DonationManagement
         /// An Integer containing the number of rows updated.
         public int ExecuteNonQuery(string sql)
         {
-            SQLiteConnection cnn = new SQLiteConnection(dbConnection);
-            cnn.Open();
-            SQLiteCommand mycommand = new SQLiteCommand(cnn);
-            mycommand.CommandText = sql;
-            int rowsUpdated = mycommand.ExecuteNonQuery();
-            cnn.Close();
+            int rowsUpdated;
+            using (SQLiteConnection cnn = new SQLiteConnection(dbConnection))
+            {
+                cnn.Open();
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, cnn))
+                {
+                    rowsUpdated = cmd.ExecuteNonQuery();
+                }
+                cnn.Close();
+            }
             return rowsUpdated;
         }
         ///
@@ -93,12 +104,16 @@ namespace DonationManagement
         /// A string.
         public string ExecuteScalar(string sql)
         {
-            SQLiteConnection cnn = new SQLiteConnection(dbConnection);
-            cnn.Open();
-            SQLiteCommand mycommand = new SQLiteCommand(cnn);
-            mycommand.CommandText = sql;
-            object value = mycommand.ExecuteScalar();
-            cnn.Close();
+            object value = null;
+            using (SQLiteConnection cnn = new SQLiteConnection(dbConnection))
+            {
+                cnn.Open();
+                using (SQLiteCommand mycommand = new SQLiteCommand(sql, cnn))
+                {
+                    value = mycommand.ExecuteScalar();
+                }
+                cnn.Close();
+            }
             if (value != null)
             {
                 return value.ToString();
@@ -200,7 +215,8 @@ namespace DonationManagement
             {
                 if (val.Key != "ID")
                 {
-                    if (val.Value != "") {
+                    if (val.Value != "")
+                    {
                         columns += String.Format(" {0},", val.Key.ToString());
                         values += String.Format(" '{0}',", val.Value);
                     }

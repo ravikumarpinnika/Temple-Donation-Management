@@ -41,7 +41,7 @@
 
         </Style>
     </Window.Resources>
-    <StackPanel Margin="0,0,0,0">
+    <StackPanel Margin="0,0,0,0" Name="MainPanel">
         <StackPanel.Background>
             <ImageBrush ImageSource="Images/images.jpg"/>
         </StackPanel.Background>
@@ -51,7 +51,7 @@
                 <ColumnDefinition Width="936*"/>
             </Grid.ColumnDefinitions>
 
-            <Button Content="Home" HorizontalAlignment="Left" Name="btnDonationHome"  Height="31" Margin="8,19,0,0" VerticalAlignment="Top" Width="132" Click="btnDonationHome_Click"/>
+            <Button Content="Donations" HorizontalAlignment="Left" Name="btnDonationHome"  Height="31" Margin="8,19,0,0" VerticalAlignment="Top" Width="132" Click="btnDonationHome_Click"/>
             <Button Content="Expenses" HorizontalAlignment="Left" Name="btnExpenses" Height="31" Margin="8,55,0,0" VerticalAlignment="Top" Width="132" Click="btnExpenses_Click"/>
             <Button Content="Reports" HorizontalAlignment="Left" Height="31" Name="btnReports" Margin="8,91,0,0" VerticalAlignment="Top" Click="btnReports_Click" Width="132"/>
             <Button Content="SQL" Name="btnSqlSettings"  HorizontalAlignment="Left" Height="31" Margin="8,127,0,0" VerticalAlignment="Top" Width="132" RenderTransformOrigin="0.448,4.171" Click="btnSqlSettings_Click"/>
@@ -59,24 +59,24 @@
             <StackPanel Grid.Column="1" Name="stkAddDonations"  Margin="0,10,0,0" VerticalAlignment="Top" Visibility="Collapsed" >
                 <StackPanel Height="50" Margin="0,0,0,0">
                     <Canvas Height="50" Margin="0,0,272.6,0">
-                        <Button Height="40" Width="40" Canvas.Left="0" Canvas.Top="2" Click="btnAddDonation_Click">
+                        <Button Height="40" Width="40" Canvas.Left="0" Canvas.Top="2" Click="btnAddDonation_Click" ToolTip="Create new donation">
                             <Button.Background>
                                 <ImageBrush ImageSource="Images/Donate-50.png"/>
                             </Button.Background>
                         </Button>
-                        <Button Height="40" Width="40" Canvas.Left="42" Canvas.Top="2" Click="EditDonation_Click">
+                        <Button Height="40" Width="40" Canvas.Left="42" Canvas.Top="2" Click="EditDonation_Click" ToolTip="Edit selected donation">
                             <Button.Background>
-                                <ImageBrush ImageSource="Images/EditRow-40.png"/>
+                                <ImageBrush ImageSource="Images/Dedit.png"/>
                             </Button.Background>
                         </Button>
                         <Button Height="40" Width="40" Canvas.Left="84" Canvas.Top="2" Click="btnDeleteDonation_Click" ToolTip="select donation and delete">
                             <Button.Background>
-                                <ImageBrush ImageSource="Images/DeleteRow-40.png"/>
+                                <ImageBrush ImageSource="Images/ddelete.png"/>
                             </Button.Background>
                         </Button>
-                        <Button Height="40" Width="40" Canvas.Left="128" Canvas.Top="2" Name="btnPrint" Click="btnPrint_Click"  ToolTip="select donation and delete">
+                        <Button Height="40" Width="40" Canvas.Left="128" Canvas.Top="2" Name="btnPrint" Click="btnPrint_Click"  ToolTip="select donation for print">
                             <Button.Background>
-                                <ImageBrush ImageSource="Images/DeleteRow-40.png"/>
+                                <ImageBrush ImageSource="Images/print.png"/>
                             </Button.Background>
                         </Button>
                     </Canvas>
@@ -117,7 +117,7 @@
                         <Label Content="Date :" HorizontalAlignment="Left" Margin="10,0.6,0,0" Grid.Row="1" VerticalAlignment="Top" Height="26" Width="40"/>
                         <DatePicker Grid.Column="1" HorizontalAlignment="Left" Name="TxtDate" Margin="15.4,1.6,0,0" Grid.Row="1" VerticalAlignment="Top" Width="327" Height="26"/>
                         <Label Content="Fund Type:" HorizontalAlignment="Left" Margin="10,2.4,0,0" Grid.Row="7" VerticalAlignment="Top" Height="26" Width="88"/>
-                        <ComboBox Grid.Column="1" HorizontalAlignment="Left" Margin="15.4,2,0,0" Grid.Row="7" SelectedValuePath="Content"  Name="txtFundType" VerticalAlignment="Top" Width="327" Height="26">
+                        <ComboBox Grid.Column="1" HorizontalAlignment="Left" Margin="15.4,2,0,0" Grid.Row="7" SelectedValuePath="Content"   Name="cbFundType" VerticalAlignment="Top" Width="327" Height="26">
                             <ComboBoxItem Name="FUND" Content="FUND" IsSelected="True"/>
                             <ComboBoxItem Name="ANNASANTARPANA" Content="ANNASANTARPANA"  />
                             <ComboBoxItem Name="BuildingConstruction" Content="Building Construction" />
@@ -128,15 +128,15 @@
                         <RadioButton Content="Female" Grid.Column="1" HorizontalAlignment="Left" GroupName="test" Name="rbfeMale" Margin="69.4,3.6,0,0" Grid.Row="3" VerticalAlignment="Top" RenderTransformOrigin="2.238,0.549" Height="16" Width="53"/>
                         <Label Content="Amount:"  HorizontalAlignment="Left" Margin="10,2,0,0" Grid.Row="8" VerticalAlignment="Top" Height="26" Width="56"/>
                         <TextBox Grid.Column="1" PreviewTextInput="NumberValidationTextBox" HorizontalAlignment="Left" TextAlignment="Right"  Name="txtAmount" Height="26" Margin="15.4,2,0,0" Grid.Row="8" TextWrapping="Wrap" VerticalAlignment="Top" Width="159"/>
-                        <ComboBox Grid.Column="1" HorizontalAlignment="Left"  Name="txtByType" SelectedValuePath="Content" Margin="179.4,2,0,0" Grid.Row="8" VerticalAlignment="Top" Width="163" Height="26">
+                        <ComboBox Grid.Column="1" HorizontalAlignment="Left"  Name="cbByType" SelectionChanged="cbByType_SelectionChanged"  SelectedValuePath="Content" Margin="179.4,2,0,0" Grid.Row="8" VerticalAlignment="Top" Width="163" Height="26">
                             <ComboBoxItem Content="By Cash" IsSelected="True" />
                             <ComboBoxItem Content="DD" />
                             <ComboBoxItem Content="Checkque" />
                             <ComboBoxItem Content="By Bank" />
                             <ComboBoxItem Content="Other" />
                         </ComboBox>
-                        <Label Content="NO #" HorizontalAlignment="Left" Margin="10,2.4,0,0" Grid.Row="9" VerticalAlignment="Top" Height="24" Width="38"/>
-                        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="26"  Name="txtBNo" Margin="15.4,2.4,0,0" Grid.Row="9" TextWrapping="Wrap" VerticalAlignment="Top" Width="327"/>
+                        <Label Content="NO #" IsEnabled="False" Name="lblNo" HorizontalAlignment="Left" Margin="10,2.4,0,0" Grid.Row="9" VerticalAlignment="Top" Height="24" Width="38"/>
+                        <TextBox Grid.Column="1" IsEnabled="False" HorizontalAlignment="Left" Height="26"  Name="txtBNo" Margin="15.4,2.4,0,0" Grid.Row="9" TextWrapping="Wrap" VerticalAlignment="Top" Width="327"/>
                         <Button Content="Save" Grid.Column="1" Name="btnSaveDonation" HorizontalAlignment="Left" Margin="169.4,3,0,1" Grid.Row="12" VerticalAlignment="Top" Width="75" Height="24" Click="btnSaveDonation_Click"/>
                         <Button Content="Cancel"  Name="btnCancel" Click="btnCancel_Click"  Grid.Column="1" HorizontalAlignment="Left" Margin="250.4,3,0,1" Grid.Row="12" VerticalAlignment="Top" Width="75" Height="24"/>
                         <Label Content="Phone No:" HorizontalAlignment="Left"  Margin="10,2.4,0,0" Grid.Row="5" VerticalAlignment="Top" Height="25" Width="66"/>
@@ -220,7 +220,7 @@
 
 
             </StackPanel>
-            <StackPanel Name="SplReport" Visibility="Visible" HorizontalAlignment="Left"  Margin="162,0,-4,0" VerticalAlignment="Top" MinWidth="1050" MinHeight="500" Grid.ColumnSpan="2" Height="672">
+            <StackPanel Name="SplReport" Visibility="collapsed" HorizontalAlignment="Left"  Margin="162,0,-4,0" VerticalAlignment="Top" MinWidth="1050" MinHeight="500" Grid.ColumnSpan="2" Height="672">
                 <Grid Margin="0,0,0,0" Height="674">
                     <TabControl HorizontalAlignment="Left"  Margin="0,0,0,0" Name="ReportsTab" VerticalAlignment="Top"  Width="1040" Height="674" >
                         <TabItem Header="Donation" >
@@ -247,6 +247,7 @@
                                 <Label Content="Name Contains :" HorizontalAlignment="Left" Margin="342,9,0,0" VerticalAlignment="Top"/>
                                 <TextBox HorizontalAlignment="Left" Height="23" Name="txtRDName" Margin="449,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="276" TextChanged="txtRDName_TextChanged"/>
                                 <Button Content="Load" HorizontalAlignment="Left" Margin="735,10,0,0" VerticalAlignment="Top" Width="75" Name="btnRDLoad" Click="btnRDLoad_Click"/>
+                                <Button Content="Export toExcel" Name="btnDExpExcel" Click="btnDExpExcel_Click" HorizontalAlignment="Left" Margin="824,10,0,0" VerticalAlignment="Top" Width="115"/>
 
                             </Grid>
                         </TabItem>
@@ -272,6 +273,7 @@
                                 <Label Content="Name Contains :" HorizontalAlignment="Left" Margin="331,9,0,0" VerticalAlignment="Top"/>
                                 <TextBox HorizontalAlignment="Left" Name="txtREName" Height="23" Margin="435,10,0,0" TextWrapping="Wrap" TextChanged="txtREName_TextChanged" VerticalAlignment="Top" Width="271"/>
                                 <Button Content="Load" HorizontalAlignment="Left" Margin="728,10,0,0" VerticalAlignment="Top" Width="75" Name="btnRELoad" Click="btnRELoad_Click"/>
+                                <Button Content="Export toExcel" Name="btnEExpExcel" Click="btnEExpExcel_Click" HorizontalAlignment="Left" Margin="819,10,0,0" VerticalAlignment="Top" Width="115"/>
 
                             </Grid>
                         </TabItem>
