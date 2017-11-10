@@ -61,10 +61,10 @@ namespace DonationManagement
         private void LoadData()
         {
             SQLiteDatabase db = new SQLiteDatabase();
-            string expenseQuery = "Select * from Donations ORDER BY Created DESC";
-            DataTable dtd = db.GetDataTable(expenseQuery);
+            string expenseQuery = "Select * from Donations ORDER BY Created DESC LIMIT 10";
+            // DataTable dtd = db.GetDataTable(expenseQuery);
 
-            List<Donation> lidon = dtd.DataTableToList<Donation>();
+            List<Donation> lidon = db.GetDataList<Donation>(expenseQuery); //dtd.DataTableToList<Donation>();
             grdDonations.ItemsSource = lidon;
         }
 
@@ -138,14 +138,19 @@ namespace DonationManagement
                     return;
                 }
             }
-            if ((cbFundType.SelectedItem as ComboBoxItem).Content.ToString() != "By Cash")
+            if (cbByType.SelectedItem != null)
             {
-                MessageBox.Show("Please Enter Neft/ DD / Check Number");
-                return;
+                if ((cbByType.SelectedItem as ComboBoxItem).Content.ToString() != "By Cash")
+                {
+                    MessageBox.Show("Please Enter Neft/ DD / Check Number");
+                    return;
+                }
             }
+
+
             db = new SQLiteDatabase();
             Donation dobj = new Donation();
-            dobj.ReceiptNo = Convert.ToInt64(txtSLNo.Text);
+            dobj.ReceiptNo = txtSLNo.Text;//
             dobj.Ddate = TxtDate.Text;
             dobj.Name = txtName.Text;
             dobj.Gender = (bool)rbfeMale.IsChecked ? "Female" : "Male";
@@ -472,7 +477,7 @@ namespace DonationManagement
 
         private void Wb_Navigated(object sender, NavigationEventArgs e)
         {
-            System.Threading.Thread.Sleep(1000);
+            System.Threading.Thread.Sleep(100);
             mshtml.IHTMLDocument2 doc = wb.Document as mshtml.IHTMLDocument2;
             doc.execCommand("Print", true, null);
         }
@@ -489,16 +494,16 @@ namespace DonationManagement
 
             string words = "";
 
-            if ((number / 1000000) > 0)
+            if ((number / 100000) > 0)
             {
-                words += NumberToWords(number / 1000000) + " million ";
-                number %= 1000000;
+                words += NumberToWords(number / 100000) + " million ";
+                number %= 100000;
             }
 
-            if ((number / 1000) > 0)
+            if ((number / 100) > 0)
             {
-                words += NumberToWords(number / 1000) + " thousand ";
-                number %= 1000;
+                words += NumberToWords(number / 100) + " thousand ";
+                number %= 100;
             }
 
             if ((number / 100) > 0)
@@ -577,25 +582,60 @@ namespace DonationManagement
                 MessageBox.Show("Please select date");
                 return;
             }
+
             db = new SQLiteDatabase();
             string expenseQuery = "Select * from Donations where Created BETWEEN '" + dpRDFrom.Text + " 00:00:00 AM' AND '" + dpRDTo.Text + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtRDName.Text) ? "" : "AND Name Like '%" + txtRDName.Text + "%'") + " ORDER BY Created DESC";
-            DataTable dtd = db.GetDataTable(expenseQuery);
-            List<Donation> lidon = dtd.DataTableToList<Donation>();
+            // DataTable dtd = db.GetDataTable(expenseQuery);
+            List<Donation> lidon = db.GetDataList<Donation>(expenseQuery); //dtd.DataTableToList<Donation>();
             grdRepDonations.ItemsSource = lidon;
+
+            string countqry = "Select Count(*) as Count,SUM(Amount) as Total from Donations where Created BETWEEN '" + dpRDFrom.Text + " 00:00:00 AM' AND '" + dpRDTo.Text + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtRDName.Text) ? "" : "AND Name Like '%" + txtRDName.Text + "%'");
+            DataTable ctd = db.GetDataTable(countqry);
+            if (ctd.Rows.Count > 0)
+            {
+                lblDrows.Content = ctd.Rows[0].Field<Int64>("Count").ToString();
+                lblDTotal.Content = ctd.Rows[0].Field<Int64>("Total").ToString();
+            }
+            else
+            {
+                lblDrows.Content = lblDTotal.Content = "0";
+
+            }
         }
 
         private void btnRELoad_Click(object sender, RoutedEventArgs e)
         {
-            if (dpREFrom.Text == "" || dpRETo.Text == "")
+            try
             {
-                MessageBox.Show("Please select date");
-                return;
+                if (dpREFrom.Text == "" || dpRETo.Text == "")
+                {
+                    MessageBox.Show("Please select date");
+                    return;
+                }
+                db = new SQLiteDatabase();
+                string expenseQuery = "Select * from EXPENSES where Created BETWEEN '" + dpREFrom.Text + " 00:00:00 AM' AND '" + dpRETo.Text + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtREName.Text) ? "" : "AND Name Like '%" + txtREName.Text + "%'") + " ORDER BY Created DESC";
+                DataTable dtd = db.GetDataTable(expenseQuery);
+                List<Expense> lidon = dtd.DataTableToList<Expense>();
+                grdRepExpenses.ItemsSource = lidon;
+
+                string countqry = "Select Count(*) as Count,SUM(Amount) as Total from EXPENSES where Created BETWEEN '" + dpREFrom.Text + " 00:00:00 AM' AND '" + dpRETo.Text + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtREName.Text) ? "" : "AND Name Like '%" + txtREName.Text + "%'");
+                DataTable ctd = db.GetDataTable(countqry);
+                if (ctd.Rows.Count > 0)
+                {
+                    lblErows.Content = ctd.Rows[0].Field<Int64>("Count");
+                    lblETotal.Content = ctd.Rows[0].Field<Double>("Total");
+                }
+                else
+                {
+                    lblErows.Content = lblETotal.Content = "0";
+
+                }
             }
-            db = new SQLiteDatabase();
-            string expenseQuery = "Select * from EXPENSES where Created BETWEEN '" + dpREFrom.Text + " 00:00:00 AM' AND '" + dpRETo.Text + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtREName.Text) ? "" : "AND Name Like '%" + txtREName.Text + "%'") + " ORDER BY Created DESC";
-            DataTable dtd = db.GetDataTable(expenseQuery);
-            List<Expense> lidon = dtd.DataTableToList<Expense>();
-            grdRepExpenses.ItemsSource = lidon;
+            catch (Exception)
+            {
+
+
+            }
         }
 
         private void txtRDName_TextChanged(object sender, TextChangedEventArgs e)
@@ -620,10 +660,10 @@ namespace DonationManagement
             }
             gdChart.Children.Clear();
             db = new SQLiteDatabase();
-            string Query = "Select ID, Edate as Date, Amount from EXPENSES where Created BETWEEN '" + dpRCFrom.Text + " 00:00:00 AM' AND '" + dpRCTo.Text + " 11:59:00 PM' ORDER BY Created DESC";
+            string Query = "Select ID, Edate as Date, Amount from EXPENSES where Created BETWEEN '" + dpRCFrom.Text + " 00:00:00 AM' AND '" + dpRCTo.Text + " 11:59:00 PM' ORDER BY Created DESC LIMIT 100";
             DataTable dtd = db.GetDataTable(Query);
             List<ChartData> liexp = dtd.DataTableToList<ChartData>();
-            Query = "Select ReceiptNo, Ddate as Date, Amount from Donations where Created BETWEEN '" + dpRCFrom.Text + " 00:00:00 AM' AND '" + dpRCTo.Text + " 11:59:00 PM' ORDER BY Created DESC";
+            Query = "Select ReceiptNo, Ddate as Date, Amount from Donations where Created BETWEEN '" + dpRCFrom.Text + " 00:00:00 AM' AND '" + dpRCTo.Text + " 11:59:00 PM' ORDER BY Created DESC LIMIT 100";
             DataTable dte = db.GetDataTable(Query);
             List<ChartData> lidon = dtd.DataTableToList<ChartData>();
 
@@ -647,11 +687,16 @@ namespace DonationManagement
             try
             {
                 db = new SQLiteDatabase();
-                string expenseQuery = "Select * from Donations where Created BETWEEN '" + dpRDFrom.Text + " 00:00:00 AM' AND '" + dpRDTo.Text + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtRDName.Text) ? "" : "AND Name Like '%" + txtRDName.Text + "%'") + " ORDER BY Created DESC";
+
+                string expenseQuery = "Select * from Donations where Created BETWEEN '" + dpRDFrom.Text + " 00:00:00 AM' AND '" + dpRDTo.Text + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtRDName.Text) ? "" : "AND Name Like '%" + txtRDName.Text + "%'") + " ORDER BY Created DESC LIMIT 100";
                 DataTable dtd = db.GetDataTable(expenseQuery);
+
+                List<Donation> ld = db.GetDataList<Donation>(expenseQuery);
+
+
                 List<Donation> lidon = dtd.DataTableToList<Donation>();
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
-                // saveFileDialog.FileName= "Donation" +(new Random(10000)).Next(0, 10000).ToString() + ".csv";
+                // saveFileDialog.FileName= "Donation" +(new Random(1000)).Next(0, 1000).ToString() + ".csv";
                 //saveFileDialog.Filter ="|*.csv";
                 saveFileDialog.DefaultExt = ".csv";
                 if (saveFileDialog.ShowDialog() == true)
@@ -671,11 +716,13 @@ namespace DonationManagement
             try
             {
                 db = new SQLiteDatabase();
-                string expenseQuery = "Select * from EXPENSES where Created BETWEEN '" + dpREFrom.Text + " 00:00:00 AM' AND '" + dpRETo.Text + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtREName.Text) ? "" : "AND Name Like '%" + txtREName.Text + "%'") + " ORDER BY Created DESC";
+
+                string expenseQuery = "Select * from EXPENSES where Created BETWEEN '" + dpREFrom.Text + " 00:00:00 AM' AND '" + dpRETo.Text + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtREName.Text) ? "" : "AND Name Like '%" + txtREName.Text + "%'") + " ORDER BY Created DESC  LIMIT 100";
+
                 DataTable dtd = db.GetDataTable(expenseQuery);
                 List<Expense> lidon = dtd.DataTableToList<Expense>();
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
-                // saveFileDialog.FileName = "Expense" + (new Random(10000)).Next(0,10000).ToString() + ".csv";
+                // saveFileDialog.FileName = "Expense" + (new Random(1000)).Next(0,1000).ToString() + ".csv";
                 saveFileDialog.DefaultExt = ".csv";
                 if (saveFileDialog.ShowDialog() == true)
                 {
@@ -708,6 +755,11 @@ namespace DonationManagement
                     }
                 }
             }
+        }
+
+        private void btnClean_Click(object sender, RoutedEventArgs e)
+        {
+            txtQuery.Text = "VACUUM;";
         }
     }
 }

@@ -7,7 +7,7 @@ namespace DonationManagement
 {
     public class Donation
     {
-        public long ReceiptNo { get; set; }
+        public string ReceiptNo { get; set; }
         public string Ddate { get; set; }
         public string Name { get; set; }
         public string Gender { get; set; }

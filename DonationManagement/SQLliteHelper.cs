@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows;
+using System.Configuration;
 
 namespace DonationManagement
 {
@@ -20,7 +21,10 @@ namespace DonationManagement
         ///
         public SQLiteDatabase()
         {
-            dbConnection = @"Data Source=Donations.db;Version=3;new=False;datetimeformat=CurrentCulture;";
+            System.Configuration.AppSettingsReader rdr = new AppSettingsReader();
+            
+            string config = rdr.GetValue("dbConnection", typeof(string)).ToString();
+            dbConnection = config; //@"Data Source=Donations.db;Version=3;new=False;datetimeformat=CurrentCulture;Count Changes=off;Journal Mode=off;Pooling=true;Cache Size=10000;Page Size=4096;Synchronous=off";
         }
 
         ///
@@ -78,6 +82,36 @@ namespace DonationManagement
             }
             return dt;
         }
+
+
+
+        public List<T> GetDataList<T>(string sql)
+        {
+            List<T> obj=new List<T>();
+            try
+            {
+                using (SQLiteConnection cnn = new SQLiteConnection(dbConnection))
+                {
+
+                    cnn.Open();
+                    using (SQLiteCommand mycommand = new SQLiteCommand(sql, cnn))
+                    {
+                        using (SQLiteDataReader reader = mycommand.ExecuteReader())
+                        {
+                            obj = reader.CreateList<T>();
+                        }
+                        cnn.Close();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+            return obj;
+        }
+
+
         ///
         ///     Allows the programmer to interact with the database for purposes other than a query.
         ///
@@ -91,7 +125,7 @@ namespace DonationManagement
                 cnn.Open();
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, cnn))
                 {
-                    rowsUpdated = cmd.ExecuteNonQuery();
+                  rowsUpdated = cmd.ExecuteNonQuery();                  
                 }
                 cnn.Close();
             }
@@ -462,6 +496,34 @@ namespace DonationManagement
                 }
             }
             return obj;
+        }
+
+
+
+
+    }
+
+    public static class ReflectionPopulator
+    {
+        public static List<T> CreateList<T>(this SQLiteDataReader reader)
+        {
+            var results = new List<T>();
+            var properties = typeof(T).GetProperties();
+
+            while (reader.Read())
+            {
+                var item = Activator.CreateInstance<T>();
+                foreach (var property in typeof(T).GetProperties())
+                {
+                    if (!reader.IsDBNull(reader.GetOrdinal(property.Name)))
+                    {
+                        Type convertTo = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                        property.SetValue(item, Convert.ChangeType(reader[property.Name], convertTo), null);
+                    }
+                }
+                results.Add(item);
+            }
+            return results;
         }
     }
 }

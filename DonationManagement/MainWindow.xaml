@@ -173,9 +173,10 @@
                         <RowDefinition Height="177*"/>
                     </Grid.RowDefinitions>
                     <TextBox HorizontalAlignment="Left" Name="txtQuery" Height="258" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="907"/>
-                    <Button Content="Execute" HorizontalAlignment="Left" Margin="699,9.6,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
+                    <Button Content="Execute" HorizontalAlignment="Left" Margin="648,9.6,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
                     <TextBox HorizontalAlignment="Left" Name="txtOutcome" Height="334" Margin="10,10.2,0,0" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="907"/>
-                    <Button Content="Schema" Name="btnSchema" HorizontalAlignment="Left" Margin="793,9.6,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="btnSchema_Click" />
+                    <Button Content="Schema" Name="btnSchema" HorizontalAlignment="Left" Margin="742,9.6,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="btnSchema_Click" />
+                    <Button Content="Clean" Name="btnClean" Click="btnClean_Click" ToolTip="Cleaning will improve the performance" HorizontalAlignment="Left" Margin="832,8.6,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75"/>
 
                 </Grid>
             </StackPanel>
@@ -220,7 +221,7 @@
 
 
             </StackPanel>
-            <StackPanel Name="SplReport" Visibility="collapsed" HorizontalAlignment="Left"  Margin="162,0,-4,0" VerticalAlignment="Top" MinWidth="1050" MinHeight="500" Grid.ColumnSpan="2" Height="672">
+            <StackPanel Name="SplReport" Visibility="Visible" HorizontalAlignment="Left"  Margin="162,0,-4,0" VerticalAlignment="Top" MinWidth="1050" MinHeight="500" Grid.ColumnSpan="2" Height="672">
                 <Grid Margin="0,0,0,0" Height="674">
                     <TabControl HorizontalAlignment="Left"  Margin="0,0,0,0" Name="ReportsTab" VerticalAlignment="Top"  Width="1040" Height="674" >
                         <TabItem Header="Donation" >
@@ -248,6 +249,10 @@
                                 <TextBox HorizontalAlignment="Left" Height="23" Name="txtRDName" Margin="449,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="276" TextChanged="txtRDName_TextChanged"/>
                                 <Button Content="Load" HorizontalAlignment="Left" Margin="735,10,0,0" VerticalAlignment="Top" Width="75" Name="btnRDLoad" Click="btnRDLoad_Click"/>
                                 <Button Content="Export toExcel" Name="btnDExpExcel" Click="btnDExpExcel_Click" HorizontalAlignment="Left" Margin="824,10,0,0" VerticalAlignment="Top" Width="115"/>
+                                <Label Content="No of Records :" HorizontalAlignment="Left" Margin="39,588,0,0" VerticalAlignment="Top"/>
+                                <Label Content="" Name="lblDrows"  HorizontalAlignment="Left" Margin="149,588,0,0" VerticalAlignment="Top" Width="150"/>
+                                <Label Content="Total Amount :" HorizontalAlignment="Left" Margin="609,588,0,0" VerticalAlignment="Top" Width="90"/>
+                                <Label Content="" Name="lblDTotal" HorizontalAlignment="Left" Margin="729,588,0,0" VerticalAlignment="Top" Width="145"/>
 
                             </Grid>
                         </TabItem>
@@ -274,7 +279,10 @@
                                 <TextBox HorizontalAlignment="Left" Name="txtREName" Height="23" Margin="435,10,0,0" TextWrapping="Wrap" TextChanged="txtREName_TextChanged" VerticalAlignment="Top" Width="271"/>
                                 <Button Content="Load" HorizontalAlignment="Left" Margin="728,10,0,0" VerticalAlignment="Top" Width="75" Name="btnRELoad" Click="btnRELoad_Click"/>
                                 <Button Content="Export toExcel" Name="btnEExpExcel" Click="btnEExpExcel_Click" HorizontalAlignment="Left" Margin="819,10,0,0" VerticalAlignment="Top" Width="115"/>
-
+                                <Label Content="No of Records :" HorizontalAlignment="Left" Margin="39,588,0,0" VerticalAlignment="Top"/>
+                                <Label Content="" Name="lblErows"  HorizontalAlignment="Left" Margin="149,588,0,0" VerticalAlignment="Top" Width="150"/>
+                                <Label Content="Total Expense:" HorizontalAlignment="Left" Margin="609,588,0,0" VerticalAlignment="Top" Width="90"/>
+                                <Label Content="" Name="lblETotal" HorizontalAlignment="Left" Margin="729,588,0,0" VerticalAlignment="Top" Width="145"/>
                             </Grid>
                         </TabItem>
                         <TabItem Header="Income\Expenses">
@@ -293,6 +301,7 @@
                     </TabControl>
 
                 </Grid>
+               
 
             </StackPanel>
             <Button Content="Logout" x:Name="btnLogout"  HorizontalAlignment="Left" Height="31" Margin="8,163,0,0" VerticalAlignment="Top" Width="132" RenderTransformOrigin="0.448,4.171" Click="btnLogout_Click"/>
@@ -310,9 +319,9 @@
             </Canvas.Background>
             <Label Content="Login" Canvas.Left="185" Width="77" FontSize="18" FontWeight="Bold" Foreground="White" Canvas.Top="10"/>
             <Label Content="User Name:" HorizontalAlignment="Left" Height="28" Width="93" Foreground="#FFF7ECEC" FontWeight="Bold" Canvas.Left="63" Canvas.Top="67" FontSize="14"/>
-            <TextBox Height="28" Canvas.Left="161" TextWrapping="Wrap"  Canvas.Top="67" Width="216" Name="txtUname" Text="Admin"/>
+            <TextBox Height="28" Canvas.Left="161" TextWrapping="Wrap"  Canvas.Top="67" Width="216" Name="txtUname" Text=""/>
             <Label Content="Password:" HorizontalAlignment="Left" Height="28" Width="93" Foreground="#FFF7ECEC" FontWeight="Bold" Canvas.Left="63" Canvas.Top="114" FontSize="14"/>
-            <PasswordBox Height="28" Canvas.Left="161" PasswordChar="*"  Canvas.Top="114" Width="216" Name="txtPassword" Password="Admin@123"  />
+            <PasswordBox Height="28" Canvas.Left="161" PasswordChar="*"  Canvas.Top="114" Width="216" Name="txtPassword" Password=""  />
             <Button Content="Login" Name="btnLogin"  HorizontalAlignment="Left" Height="28" Width="88" Canvas.Left="289" Canvas.Top="165" FontSize="14" FontWeight="Bold" Click="btnLogin_Click"/>
         </Canvas>
 
