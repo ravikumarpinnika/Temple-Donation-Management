@@ -113,6 +113,7 @@ namespace DonationManagement
             NextNumber = NextNumber == "" ? utility.GenerateSeq() : NextNumber;//dt.Year + "" + dt.Month + "" + dt.Day + "" + dt.Hour + "" + dt.Minute + "" + dt.Millisecond.ToString().Substring(0, 2);
             txtSLNo.Text = NextNumber;
             SelectedItem = null;
+            IsDonationEdit = false;
         }
 
         private void btnSaveDonation_Click(object sender, RoutedEventArgs e)
@@ -138,6 +139,7 @@ namespace DonationManagement
                     return;
                 }
             }
+            /*
             if (cbByType.SelectedItem != null)
             {
                 if ((cbByType.SelectedItem as ComboBoxItem).Content.ToString() != "By Cash")
@@ -146,7 +148,7 @@ namespace DonationManagement
                     return;
                 }
             }
-
+            */
 
             db = new SQLiteDatabase();
             Donation dobj = new Donation();
@@ -273,6 +275,7 @@ namespace DonationManagement
                 stkAddDonations.Visibility = Visibility.Visible;
                 LoadData();
                 btnSqlSettings.IsEnabled = (LoginUser.Role == "Admin" ? true : false);
+                txtPassword.Password = "";
             }
         }
 
@@ -468,10 +471,16 @@ namespace DonationManagement
             {
                 html = html.Replace("@ReceiptNo@", Convert.ToString(SelectedItem.ReceiptNo)).Replace("@date@", SelectedItem.Ddate.Substring(0, 11)).Replace("@Name@", SelectedItem.Name)
                     .Replace("@AmountWords@", NumberToWords((int)SelectedItem.Amount) + " only").Replace("@DD@", SelectedItem.BTNo).Replace("@Amount@", Convert.ToString(SelectedItem.Amount) + "/-");
+                wb.NavigateToString(html);
+                sr.Close();
+                wb.Navigated += Wb_Navigated;
             }
-            wb.NavigateToString(html);
-            sr.Close();
-            wb.Navigated += Wb_Navigated;
+            else
+            {
+                wb = null;
+                MessageBox.Show("Pleases select item to print", "Print");
+            }
+
 
         }
 
@@ -582,19 +591,21 @@ namespace DonationManagement
                 MessageBox.Show("Please select date");
                 return;
             }
+            string dtfrom = Convert.ToDateTime(dpRDFrom.Text).ToString("MM/dd/yyyy");
+            string dtto = Convert.ToDateTime(dpRDTo.Text).ToString("MM/dd/yyyy");
 
             db = new SQLiteDatabase();
-            string expenseQuery = "Select * from Donations where Created BETWEEN '" + dpRDFrom.Text + " 00:00:00 AM' AND '" + dpRDTo.Text + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtRDName.Text) ? "" : "AND Name Like '%" + txtRDName.Text + "%'") + " ORDER BY Created DESC";
+            string expenseQuery = "Select * from Donations where Created BETWEEN '" + dtfrom + " 00:00:00 AM' AND '" + dtto + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtRDName.Text) ? "" : "AND Name Like '%" + txtRDName.Text + "%'") + " ORDER BY Created DESC";
             // DataTable dtd = db.GetDataTable(expenseQuery);
             List<Donation> lidon = db.GetDataList<Donation>(expenseQuery); //dtd.DataTableToList<Donation>();
             grdRepDonations.ItemsSource = lidon;
 
-            string countqry = "Select Count(*) as Count,SUM(Amount) as Total from Donations where Created BETWEEN '" + dpRDFrom.Text + " 00:00:00 AM' AND '" + dpRDTo.Text + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtRDName.Text) ? "" : "AND Name Like '%" + txtRDName.Text + "%'");
+            string countqry = "Select Count(*) as Count,SUM(Amount) as Total from Donations where Created BETWEEN '" + dtfrom + " 00:00:00 AM' AND '" + dtto + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtRDName.Text) ? "" : "AND Name Like '%" + txtRDName.Text + "%'");
             DataTable ctd = db.GetDataTable(countqry);
             if (ctd.Rows.Count > 0)
             {
-                lblDrows.Content = ctd.Rows[0].Field<Int64>("Count").ToString();
-                lblDTotal.Content = ctd.Rows[0].Field<Int64>("Total").ToString();
+                lblDrows.Content = Convert.ToString(ctd.Rows[0]["Count"] != DBNull.Value ? ctd.Rows[0].Field<Int64>("Count") : 0);
+                lblDTotal.Content = Convert.ToString(ctd.Rows[0]["Total"] != DBNull.Value ? ctd.Rows[0].Field<Int64>("Total") : 0);
             }
             else
             {
@@ -612,18 +623,20 @@ namespace DonationManagement
                     MessageBox.Show("Please select date");
                     return;
                 }
+                string dtfrom = Convert.ToDateTime(dpREFrom.Text).ToString("MM/dd/yyyy");
+                string dtto = Convert.ToDateTime(dpRETo.Text).ToString("MM/dd/yyyy");
                 db = new SQLiteDatabase();
-                string expenseQuery = "Select * from EXPENSES where Created BETWEEN '" + dpREFrom.Text + " 00:00:00 AM' AND '" + dpRETo.Text + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtREName.Text) ? "" : "AND Name Like '%" + txtREName.Text + "%'") + " ORDER BY Created DESC";
+                string expenseQuery = "Select * from EXPENSES where Created BETWEEN '" + dtfrom + " 00:00:00 AM' AND '" + dtto + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtREName.Text) ? "" : "AND Name Like '%" + txtREName.Text + "%'") + " ORDER BY Created DESC";
                 DataTable dtd = db.GetDataTable(expenseQuery);
                 List<Expense> lidon = dtd.DataTableToList<Expense>();
                 grdRepExpenses.ItemsSource = lidon;
 
-                string countqry = "Select Count(*) as Count,SUM(Amount) as Total from EXPENSES where Created BETWEEN '" + dpREFrom.Text + " 00:00:00 AM' AND '" + dpRETo.Text + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtREName.Text) ? "" : "AND Name Like '%" + txtREName.Text + "%'");
+                string countqry = "Select Count(*) as Count,SUM(Amount) as Total from EXPENSES where Created BETWEEN '" + dtfrom + " 00:00:00 AM' AND '" + dtto + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtREName.Text) ? "" : "AND Name Like '%" + txtREName.Text + "%'");
                 DataTable ctd = db.GetDataTable(countqry);
                 if (ctd.Rows.Count > 0)
                 {
-                    lblErows.Content = ctd.Rows[0].Field<Int64>("Count");
-                    lblETotal.Content = ctd.Rows[0].Field<Double>("Total");
+                    lblErows.Content = Convert.ToString(ctd.Rows[0]["Count"] != DBNull.Value ? ctd.Rows[0].Field<Int64>("Count") : 0);
+                    lblETotal.Content = Convert.ToString(ctd.Rows[0]["Total"] != DBNull.Value ? ctd.Rows[0].Field<Int64>("Total") : 0);
                 }
                 else
                 {
@@ -659,11 +672,13 @@ namespace DonationManagement
                 return;
             }
             gdChart.Children.Clear();
+            string dtfrom = Convert.ToDateTime(dpRCFrom.Text).ToString("MM/dd/yyyy");
+            string dtto = Convert.ToDateTime(dpRCTo.Text).ToString("MM/dd/yyyy");
             db = new SQLiteDatabase();
-            string Query = "Select ID, Edate as Date, Amount from EXPENSES where Created BETWEEN '" + dpRCFrom.Text + " 00:00:00 AM' AND '" + dpRCTo.Text + " 11:59:00 PM' ORDER BY Created DESC LIMIT 100";
+            string Query = "Select ID, Edate as Date, Amount from EXPENSES where Created BETWEEN '" + dtfrom + " 00:00:00 AM' AND '" + dtto + " 11:59:00 PM' ORDER BY Created DESC LIMIT 100";
             DataTable dtd = db.GetDataTable(Query);
             List<ChartData> liexp = dtd.DataTableToList<ChartData>();
-            Query = "Select ReceiptNo, Ddate as Date, Amount from Donations where Created BETWEEN '" + dpRCFrom.Text + " 00:00:00 AM' AND '" + dpRCTo.Text + " 11:59:00 PM' ORDER BY Created DESC LIMIT 100";
+            Query = "Select ReceiptNo, Ddate as Date, Amount from Donations where Created BETWEEN '" + dtfrom + " 00:00:00 AM' AND '" + dtto + " 11:59:00 PM' ORDER BY Created DESC LIMIT 100";
             DataTable dte = db.GetDataTable(Query);
             List<ChartData> lidon = dtd.DataTableToList<ChartData>();
 
@@ -738,6 +753,7 @@ namespace DonationManagement
 
         private void cbByType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            return;
             if (pageLoaded)
             {
                 ComboBoxItem cb = ((sender as ComboBox).SelectedItem as ComboBoxItem);

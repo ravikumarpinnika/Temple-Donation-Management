@@ -135,10 +135,10 @@
                             <ComboBoxItem Content="By Bank" />
                             <ComboBoxItem Content="Other" />
                         </ComboBox>
-                        <Label Content="NO #" IsEnabled="False" Name="lblNo" HorizontalAlignment="Left" Margin="10,2.4,0,0" Grid.Row="9" VerticalAlignment="Top" Height="24" Width="38"/>
-                        <TextBox Grid.Column="1" IsEnabled="False" HorizontalAlignment="Left" Height="26"  Name="txtBNo" Margin="15.4,2.4,0,0" Grid.Row="9" TextWrapping="Wrap" VerticalAlignment="Top" Width="327"/>
+                        <Label Content="NO #" IsEnabled="True" Name="lblNo" HorizontalAlignment="Left" Margin="10,2.4,0,0" Grid.Row="9" VerticalAlignment="Top" Height="24" Width="38"/>
+                        <TextBox Grid.Column="1" IsEnabled="True" HorizontalAlignment="Left" Height="26"  Name="txtBNo" Margin="15.4,2.4,0,0" Grid.Row="9" TextWrapping="Wrap" VerticalAlignment="Top" Width="327"/>
                         <Button Content="Save" Grid.Column="1" Name="btnSaveDonation" HorizontalAlignment="Left" Margin="169.4,3,0,1" Grid.Row="12" VerticalAlignment="Top" Width="75" Height="24" Click="btnSaveDonation_Click"/>
-                        <Button Content="Cancel"  Name="btnCancel" Click="btnCancel_Click"  Grid.Column="1" HorizontalAlignment="Left" Margin="250.4,3,0,1" Grid.Row="12" VerticalAlignment="Top" Width="75" Height="24"/>
+                        <Button Content="Close"  Name="btnCancel" Click="btnCancel_Click"  Grid.Column="1" HorizontalAlignment="Left" Margin="250.4,3,0,1" Grid.Row="12" VerticalAlignment="Top" Width="75" Height="24"/>
                         <Label Content="Phone No:" HorizontalAlignment="Left"  Margin="10,2.4,0,0" Grid.Row="5" VerticalAlignment="Top" Height="25" Width="66"/>
                         <TextBox Grid.Column="1" HorizontalAlignment="Left" Text="+91" Height="26"  Name="txtPhone" Margin="15.4,2.4,0,0" Grid.Row="5" TextWrapping="Wrap" VerticalAlignment="Top" Width="327"/>
                         <Label Content="Comments:"  HorizontalAlignment="Left" Margin="10,1.8,0,0" Grid.Row="11" VerticalAlignment="Top" Height="26" Width="70"/>
