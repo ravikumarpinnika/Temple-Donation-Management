@@ -1,0 +1,19 @@
+Particulars - Exp Name
+Vendor Name - Shri Shakti Traders
+Expense Date
+Amount of Credit to party
+Reason - Expense reason 
+Voucher number - <V -  number(00001)>
+Fund Name
+Fund Account number
+Transaction Type - List with( By Cash , By Bank Transfer, By Cheque, By DD)
+Transaction Reference number - < Cash- Blank> < By Bank -Account number should be same as Fund Accountnumber), By Cheque - Cheque number, By DD, DD number)
+
+Vendor Bill Number
+Vendor Bill Date
+
+Date of Voucher
+
+
+REPORTS -  ADD Fund Account and Name in Filter for Donation
+	-  Add FUND Account and NAme in Filter for 
