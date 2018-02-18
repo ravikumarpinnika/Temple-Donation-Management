@@ -11,11 +11,11 @@ namespace DonationManagement
    public class Utility
     {
         SQLiteDatabase db;
-        public string GenerateSeq()
+        public string GenerateSeq(string tabName)
         {
             string nextnumber;
             db = new SQLiteDatabase();
-            string qry = "select * from Sequence where TabName='Donations' LIMIT 1";
+            string qry = "select * from Sequence where TabName='"+ tabName + "' LIMIT 1";
             DataTable Seq = db.GetDataTable(qry);
             DateTime dt = DateTime.Now;
             string todayseq = dt.Year.ToString() + dt.Month.ToString() + dt.Day.ToString();
@@ -84,6 +84,24 @@ namespace DonationManagement
                     sw.Write(newLine);
                 }
             }
+        }
+
+
+        public static Dictionary<string, string> GetTypePropertyValues<T>(T o)
+        {
+            Dictionary<string, string> obj = new Dictionary<string, string>();
+            // ItemDetails o = new ItemDetails();
+            PropertyInfo[] p = o.GetType().GetProperties();
+
+            foreach (PropertyInfo item in p)
+            {
+                object t = new object();
+                obj.Add(Convert.ToString(item.Name), Convert.ToString(item.GetValue(o, null)));
+
+            }
+
+            return obj;
+
         }
     }
 }

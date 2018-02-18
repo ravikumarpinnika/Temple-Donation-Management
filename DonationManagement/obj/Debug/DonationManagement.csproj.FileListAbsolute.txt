@@ -1,19 +1,64 @@
-c:\users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\bin\Debug\DonationManagement.exe
-c:\users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\bin\Debug\DonationManagement.pdb
-c:\users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\bin\Debug\System.Data.SQLite.dll
-c:\users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\bin\Debug\System.Data.SQLite.xml
-c:\users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\bin\Debug\System.Data.SQLite.dll.config
-c:\users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\MainWindow.g.cs
-c:\users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\App.g.cs
-c:\users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\DonationManagement_MarkupCompile.cache
-c:\users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\DonationManagement_MarkupCompile.lref
-c:\users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\MainWindow.baml
-c:\users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\DonationManagement.g.resources
-c:\users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\DonationManagement.Properties.Resources.resources
-c:\users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\DonationManagement.csproj.GenerateResource.Cache
-c:\users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\DonationManagement.exe
-c:\users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\DonationManagement.pdb
-C:\Users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\DonationManagement.csprojResolveAssemblyReference.cache
-C:\Users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\DonationManagement_Content.g.cs
 C:\Users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\bin\Debug\Images\Receipt.png
-C:\Users\rpinnik\Documents\Visual Studio 2017\Projects\DonationManagement\DonationManagement\bin\Debug\DonationManagement.exe.config
+C:\Users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\bin\Debug\DonationManagement.exe.config
+C:\Users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\bin\Debug\DonationManagement.exe
+C:\Users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\bin\Debug\DonationManagement.pdb
+C:\Users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\bin\Debug\System.Data.SQLite.dll
+C:\Users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\bin\Debug\System.Data.SQLite.xml
+C:\Users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\bin\Debug\System.Data.SQLite.dll.config
+C:\Users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\Expenses.g.cs
+C:\Users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\MainWindow.g.cs
+C:\Users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\App.g.cs
+C:\Users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\DonationManagement_Content.g.cs
+C:\Users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\DonationManagement_MarkupCompile.cache
+C:\Users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\DonationManagement_MarkupCompile.lref
+C:\Users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\Expenses.baml
+C:\Users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\MainWindow.baml
+C:\Users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\DonationManagement.g.resources
+C:\Users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\DonationManagement.Properties.Resources.resources
+C:\Users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\DonationManagement.csproj.GenerateResource.Cache
+C:\Users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\DonationManagement.exe
+C:\Users\rpinnik\documents\visual studio 2017\Projects\DonationManagement\DonationManagement\obj\Debug\DonationManagement.pdb
+C:\Ravi\DonationManagement\DonationManagement\bin\Debug\Images\Receipt.png
+C:\Ravi\DonationManagement\DonationManagement\bin\Debug\DonationManagement.exe.config
+C:\Ravi\DonationManagement\DonationManagement\bin\Debug\DonationManagement.exe
+C:\Ravi\DonationManagement\DonationManagement\bin\Debug\DonationManagement.pdb
+C:\Ravi\DonationManagement\DonationManagement\obj\Debug\Expenses.g.cs
+C:\Ravi\DonationManagement\DonationManagement\obj\Debug\MainWindow.g.cs
+C:\Ravi\DonationManagement\DonationManagement\obj\Debug\App.g.cs
+C:\Ravi\DonationManagement\DonationManagement\obj\Debug\DonationManagement_Content.g.cs
+C:\Ravi\DonationManagement\DonationManagement\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Ravi\DonationManagement\DonationManagement\obj\Debug\DonationManagement_MarkupCompile.cache
+C:\Ravi\DonationManagement\DonationManagement\obj\Debug\DonationManagement_MarkupCompile.lref
+C:\Ravi\DonationManagement\DonationManagement\obj\Debug\Expenses.baml
+C:\Ravi\DonationManagement\DonationManagement\obj\Debug\MainWindow.baml
+C:\Ravi\DonationManagement\DonationManagement\obj\Debug\DonationManagement.g.resources
+C:\Ravi\DonationManagement\DonationManagement\obj\Debug\DonationManagement.Properties.Resources.resources
+C:\Ravi\DonationManagement\DonationManagement\obj\Debug\DonationManagement.csproj.GenerateResource.Cache
+C:\Ravi\DonationManagement\DonationManagement\obj\Debug\DonationManagement.exe
+C:\Ravi\DonationManagement\DonationManagement\obj\Debug\DonationManagement.pdb
+C:\Ravi\DonationManagement\DonationManagement\obj\Debug\DonationManagement.csprojResolveAssemblyReference.cache
+C:\Ravi\DonationManagement\DonationManagement\obj\Debug\Invoice.g.cs
+C:\Ravi\DonationManagement\DonationManagement\obj\Debug\Invoice.baml
+C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\bin\Debug\Images\Receipt.png
+C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\bin\Debug\DonationManagement.exe.config
+C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\bin\Debug\DonationManagement.exe
+C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\bin\Debug\DonationManagement.pdb
+C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\DonationManagement.csprojResolveAssemblyReference.cache
+C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\Expenses.g.cs
+C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\Invoice.g.cs
+C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\MainWindow.g.cs
+C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\App.g.cs
+C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\DonationManagement_Content.g.cs
+C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\DonationManagement_MarkupCompile.cache
+C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\DonationManagement_MarkupCompile.lref
+C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\Expenses.baml
+C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\Invoice.baml
+C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\MainWindow.baml
+C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\DonationManagement.g.resources
+C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\DonationManagement.Properties.Resources.resources
+C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\DonationManagement.csproj.GenerateResource.Cache
+C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\DonationManagement.csproj.CoreCompileInputs.cache
+C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\DonationManagement.exe
+C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\DonationManagement.pdb

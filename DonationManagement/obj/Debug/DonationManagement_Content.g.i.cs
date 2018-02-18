@@ -8,6 +8,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("balancesheet.html")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("expensevocher.html")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("printtemplate.html")]
 
 

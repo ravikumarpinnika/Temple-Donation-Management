@@ -118,10 +118,7 @@
                         <DatePicker Grid.Column="1" HorizontalAlignment="Left" Name="TxtDate" Margin="15.4,1.6,0,0" Grid.Row="1" VerticalAlignment="Top" Width="327" Height="26"/>
                         <Label Content="Fund Type:" HorizontalAlignment="Left" Margin="10,2.4,0,0" Grid.Row="7" VerticalAlignment="Top" Height="26" Width="88"/>
                         <ComboBox Grid.Column="1" HorizontalAlignment="Left" Margin="15.4,2,0,0" Grid.Row="7" SelectedValuePath="Content"   Name="cbFundType" VerticalAlignment="Top" Width="327" Height="26">
-                            <ComboBoxItem Name="FUND" Content="FUND" IsSelected="True"/>
-                            <ComboBoxItem Name="ANNASANTARPANA" Content="ANNASANTARPANA"  />
-                            <ComboBoxItem Name="BuildingConstruction" Content="Building Construction" />
-                            <ComboBoxItem Name="Other" Content="Other" />
+
                         </ComboBox>
                         <Label Content="Gender:" HorizontalAlignment="Left" Margin="10,0.6,0,0" Grid.Row="3" VerticalAlignment="Top" Height="26" Width="51"/>
                         <RadioButton Content="Male" Grid.Column="1" Name="rbMale" HorizontalAlignment="Left" GroupName="test" Margin="19.4,3.6,0,0" Grid.Row="3" VerticalAlignment="Top" Height="16" Width="43"/>
@@ -129,11 +126,7 @@
                         <Label Content="Amount:"  HorizontalAlignment="Left" Margin="10,2,0,0" Grid.Row="8" VerticalAlignment="Top" Height="26" Width="56"/>
                         <TextBox Grid.Column="1" PreviewTextInput="NumberValidationTextBox" HorizontalAlignment="Left" TextAlignment="Right"  Name="txtAmount" Height="26" Margin="15.4,2,0,0" Grid.Row="8" TextWrapping="Wrap" VerticalAlignment="Top" Width="159"/>
                         <ComboBox Grid.Column="1" HorizontalAlignment="Left"  Name="cbByType" SelectionChanged="cbByType_SelectionChanged"  SelectedValuePath="Content" Margin="179.4,2,0,0" Grid.Row="8" VerticalAlignment="Top" Width="163" Height="26">
-                            <ComboBoxItem Content="By Cash" IsSelected="True" />
-                            <ComboBoxItem Content="DD" />
-                            <ComboBoxItem Content="Checkque" />
-                            <ComboBoxItem Content="By Bank" />
-                            <ComboBoxItem Content="Other" />
+
                         </ComboBox>
                         <Label Content="NO #" IsEnabled="True" Name="lblNo" HorizontalAlignment="Left" Margin="10,2.4,0,0" Grid.Row="9" VerticalAlignment="Top" Height="24" Width="38"/>
                         <TextBox Grid.Column="1" IsEnabled="True" HorizontalAlignment="Left" Height="26"  Name="txtBNo" Margin="15.4,2.4,0,0" Grid.Row="9" TextWrapping="Wrap" VerticalAlignment="Top" Width="327"/>
@@ -147,7 +140,7 @@
                 </StackPanel>
                 <StackPanel  Margin="0,0,0,0" Name="splDonations" Visibility="Visible" Height="610">
                     <Grid Margin="0,0,0,0" Height="615">
-                        <DataGrid Name="grdDonations" Margin="0,10,10,10" CanUserAddRows="false" ColumnHeaderHeight="28" RowHeight="28" RowStyle="{StaticResource rowStyle}" CellStyle="{StaticResource cellStyle}"  AutoGenerateColumns="False" AlternatingRowBackground="AliceBlue" BorderThickness="0">
+                        <DataGrid Name="grdDonations" SelectionMode="Single" Margin="0,10,10,10" CanUserAddRows="false" ColumnHeaderHeight="28" RowHeight="28" RowStyle="{StaticResource rowStyle}" CellStyle="{StaticResource cellStyle}"  AutoGenerateColumns="False" AlternatingRowBackground="AliceBlue" BorderThickness="0">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Receipt No" Binding="{Binding ReceiptNo}" />
                                 <DataGridTextColumn Header="Date" Binding="{Binding Ddate}"   />
@@ -180,16 +173,17 @@
 
                 </Grid>
             </StackPanel>
-            <StackPanel Name="SplExpences" HorizontalAlignment="Left" Visibility="Collapsed"  Margin="162,0,-4,0" VerticalAlignment="Top" MinWidth="1050" MinHeight="500" Grid.ColumnSpan="2" Height="672">
+            <StackPanel Name="SplExpences" HorizontalAlignment="Left" Visibility="visible"  Margin="162,0,-4,0" VerticalAlignment="Top" MinWidth="1050" MinHeight="500" Grid.ColumnSpan="2" Height="672">
                 <Grid Margin="0,0,0,0" Height="674">
-                    <DataGrid Margin="0,89,5,2" Name="grdExpenses" CanUserAddRows="false" ColumnHeaderHeight="28" RowHeight="28" RowStyle="{StaticResource rowStyle}" CellStyle="{StaticResource cellStyle}"  AutoGenerateColumns="False" AlternatingRowBackground="AliceBlue" BorderThickness="0">
+                    <DataGrid Margin="0,60,4.6,2" SelectionMode="Single" Name="grdExpenses" CanUserAddRows="false" ColumnHeaderHeight="28" RowHeight="28" RowStyle="{StaticResource rowStyle}" CellStyle="{StaticResource cellStyle}"  AutoGenerateColumns="False" AlternatingRowBackground="AliceBlue" BorderThickness="0">
                         <DataGrid.Columns>
+                           
                             <DataGridTextColumn Header="Expense No" Binding="{Binding ID}" />
-                            <DataGridTextColumn Header="Date" Binding="{Binding Edate}"   />
-                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                            <DataGridTextColumn Header="Date" Binding="{Binding ExpDate}"   />
+                            <DataGridTextColumn Header="Name" Binding="{Binding VendorName}" />
                             <DataGridTextColumn Header="Reason" Binding="{Binding Reason}" />
-                            <DataGridTextColumn Header="Amount" Binding="{Binding Amount}" />
-                            <DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Amount" Binding="{Binding AmountPaid}" />
+                            <!--<DataGridTemplateColumn>
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Button Content="Edit" Name="GrdExpEditButton" Click="GrdExpEditButton_Click" />
@@ -202,10 +196,37 @@
                                         <Button Content="Delete" Name="GrdExpDeleteButton" Click="GrdExpDeleteButton_Click" />
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                            </DataGridTemplateColumn>-->
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Label Content="Exp Name :" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="79" Height="26"/>
+                    <Canvas Margin="18,10,474.6,614" >
+                        <Button Height="40" Width="40" Canvas.Left="0" Canvas.Top="2" Click="btnAddExp_Click" ToolTip="Create new donation">
+                            <Button.Background>
+                                <ImageBrush ImageSource="Images/Donate-50.png"/>
+                            </Button.Background>
+                        </Button>
+                        <Button Height="40" Width="40" Canvas.Left="42" Canvas.Top="2" Click="EditExp_Click" ToolTip="Edit selected donation">
+                            <Button.Background>
+                                <ImageBrush ImageSource="Images/Dedit.png"/>
+                            </Button.Background>
+                        </Button>
+                        <Button Height="40" Width="40" Canvas.Left="84" Canvas.Top="2" Click="btnDeleteExp_Click" ToolTip="select donation and delete">
+                            <Button.Background>
+                                <ImageBrush ImageSource="Images/ddelete.png"/>
+                            </Button.Background>
+                        </Button>
+                        <Button Height="40" Width="40" Canvas.Left="128" Canvas.Top="2" Name="btnEPrint" Click="btnPrintExp_Click"  ToolTip="select donation for print">
+                            <Button.Background>
+                                <ImageBrush ImageSource="Images/print.png"/>
+                            </Button.Background>
+                        </Button>
+                    </Canvas>
+
+                    <StackPanel Name="AddExpenses" Visibility="Collapsed" Margin="0,0,0,0" Panel.ZIndex="10" >
+                       
+                    </StackPanel>
+                    
+                    <!--<Label Content="Exp Name :" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="79" Height="26"/>
                     <TextBox HorizontalAlignment="Left" Height="26" x:Name="txtExpName" Margin="85,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="311"/>
                     <Label Content="Amount(Rs) :" HorizontalAlignment="Left" Margin="667,10,0,0"  VerticalAlignment="Top" Width="95" Height="26"/>
                     <TextBox HorizontalAlignment="Left" PreviewTextInput="NumberValidationTextBox" Height="26" x:Name="txtExpAmount" TextAlignment="Right" Margin="749,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="158"/>
@@ -216,12 +237,12 @@
                     <Label Content="Comment :" HorizontalAlignment="Left" Margin="419,41,0,0" VerticalAlignment="Top" Width="70" Height="26"/>
                     <TextBox HorizontalAlignment="Left" Height="43" x:Name="txtEComment" Margin="494,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="311"/>
                     <Button Content="Save/Update" HorizontalAlignment="Left" Name="BtnExpenseSave" Margin="818,58,0,0" Click="BtnExpenseSave_Click" VerticalAlignment="Top" Width="89" Height="26"/>
-                    <Button Content="Cancel" HorizontalAlignment="Left" Margin="914,58,0,0" VerticalAlignment="Top" Width="75" Height="26" Name="btnExpCancel" Click="btnExpCancel_Click" />
+                    <Button Content="Cancel" HorizontalAlignment="Left" Margin="914,58,0,0" VerticalAlignment="Top" Width="75" Height="26" Name="btnExpCancel" Click="btnExpCancel_Click" />-->
                 </Grid>
 
 
             </StackPanel>
-            <StackPanel Name="SplReport" Visibility="Visible" HorizontalAlignment="Left"  Margin="162,0,-4,0" VerticalAlignment="Top" MinWidth="1050" MinHeight="500" Grid.ColumnSpan="2" Height="672">
+            <StackPanel Name="SplReport" Visibility="Collapsed" HorizontalAlignment="Left"  Margin="162,0,-4,0" VerticalAlignment="Top" MinWidth="1050" MinHeight="500" Grid.ColumnSpan="2" Height="672">
                 <Grid Margin="0,0,0,0" Height="674">
                     <TabControl HorizontalAlignment="Left"  Margin="0,0,0,0" Name="ReportsTab" VerticalAlignment="Top"  Width="1040" Height="674" >
                         <TabItem Header="Donation" >
@@ -301,7 +322,7 @@
                     </TabControl>
 
                 </Grid>
-               
+
 
             </StackPanel>
             <Button Content="Logout" x:Name="btnLogout"  HorizontalAlignment="Left" Height="31" Margin="8,163,0,0" VerticalAlignment="Top" Width="132" RenderTransformOrigin="0.448,4.171" Click="btnLogout_Click"/>
@@ -321,7 +342,7 @@
             <Label Content="User Name:" HorizontalAlignment="Left" Height="28" Width="93" Foreground="#FFF7ECEC" FontWeight="Bold" Canvas.Left="63" Canvas.Top="67" FontSize="14"/>
             <TextBox Height="28" Canvas.Left="161" TextWrapping="Wrap"  Canvas.Top="67" Width="216" Name="txtUname" Text=""/>
             <Label Content="Password:" HorizontalAlignment="Left" Height="28" Width="93" Foreground="#FFF7ECEC" FontWeight="Bold" Canvas.Left="63" Canvas.Top="114" FontSize="14"/>
-            <PasswordBox Height="28" Canvas.Left="161" PasswordChar="*"  Canvas.Top="114" Width="216" Name="txtPassword" Password=""  />
+            <PasswordBox Height="28" Canvas.Left="161" PasswordChar="*"  Canvas.Top="114" Width="216" Name="txtPassword" Password="" KeyUp="txtPassword_KeyUp"  />
             <Button Content="Login" Name="btnLogin"  HorizontalAlignment="Left" Height="28" Width="88" Canvas.Left="289" Canvas.Top="165" FontSize="14" FontWeight="Bold" Click="btnLogin_Click"/>
         </Canvas>
 

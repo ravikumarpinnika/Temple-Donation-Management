@@ -27,7 +27,7 @@ namespace DonationManagement
         public string ModifiedBy { get; set; }
     }
 
-    public class Expense
+    public class Expense1
     {
         public int ID { get; set; }
         public int ExpenseNo { get; set; }
@@ -58,8 +58,57 @@ namespace DonationManagement
     }
     public class ChartData
     {
-        public  int ID { get; set; }
-        public  DateTime Date  { get; set; }
-        public  int Amount { get; set; }
+        public int ID { get; set; }
+        public DateTime Date { get; set; }
+        public int Amount { get; set; }
+    }
+
+   public class Expense
+    {
+
+        public int ID { get; set; }
+        public string ExpenseNo { get; set; }
+        public string VendorName { get; set; }
+        public string ExpDate { get; set; }
+        public decimal AmountPaid { get; set; }
+        public string Reason { get; set; }
+        public string VocherNo { get; set; }
+        public string FundType { get; set; }
+        //public FundTypes FType { get; set; }
+        public string TxnType { get; set; }
+        public string TxnRefNo { get; set; }
+        public string VendorBillNo { get; set; }
+        public string VendorBillDate { get; set; }
+        public string Comment { get; set; }
+        public string Created { get; set; }
+        public string Modified { get; set; }
+        public string CreatedBy { get; set; }
+        public string ModifiedBy { get; set; }
+        public bool isSelected { get; set; }
+
+    }
+
+    public class TransactionType
+    {
+        public int Id { get; set; }
+        public string TxnType { get; set; }
+        public string Comments { get; set; }
+
+    }
+
+    public class FundTypes
+    {
+        public int Id { get; set; }
+        public string FundType { get; set; }
+        public string AccountNo { get; set; }
+        public string Comments { get; set; }
+        public bool IsDefault { get; set; }
+
+    }
+
+   public static class AppGlobalData
+    {
+        public static List<FundTypes> lifundTypes { get; set; }
+        public static List<TransactionType> liTxnTypes { get; set; }
     }
 }

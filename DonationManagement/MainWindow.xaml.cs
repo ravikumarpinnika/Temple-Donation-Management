@@ -35,7 +35,9 @@ namespace DonationManagement
         bool IsExpEdit = false;
         Utility utility = new Utility();
         string NextNumber = "";
+       
         bool pageLoaded;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -49,13 +51,25 @@ namespace DonationManagement
             TxtDate.Text = DateTime.Now.ToShortDateString();
             MainGrid.Visibility = Visibility.Collapsed;
             LoginGrid.Visibility = Visibility.Visible;
-            dpexpDate.Text = DateTime.Now.ToShortDateString();
+            // dpexpDate.Text = DateTime.Now.ToShortDateString();
             dpRDFrom.Text = DateTime.Now.AddDays(-10).ToShortDateString();
             dpRDTo.Text = DateTime.Now.AddDays(1).ToShortDateString();
             dpREFrom.Text = DateTime.Now.AddDays(-10).ToShortDateString();
             dpRETo.Text = DateTime.Now.AddDays(1).ToShortDateString();
             dpRCFrom.Text = DateTime.Now.AddDays(-10).ToShortDateString();
             dpRCTo.Text = DateTime.Now.AddDays(1).ToShortDateString();
+
+        }
+
+        private void InitializeConsts()
+        {
+            SQLiteDatabase db = new SQLiteDatabase();
+            string fundQuery = "Select * from FundType";
+            AppGlobalData.lifundTypes = db.GetDataList<FundTypes>(fundQuery);
+            FillComboBox<FundTypes>(cbFundType, AppGlobalData.lifundTypes, "FundType", "FundType");
+            string TxnQuery = "Select * from TransactionType";
+            AppGlobalData.liTxnTypes = db.GetDataList<TransactionType>(TxnQuery);
+            FillComboBox<TransactionType>(cbByType, AppGlobalData.liTxnTypes, "TxnType", "TxnType");
         }
 
         private void LoadData()
@@ -110,7 +124,7 @@ namespace DonationManagement
             splAddDonation.Visibility = Visibility.Visible;
             splDonations.Visibility = Visibility.Collapsed;
             DateTime dt = DateTime.Now;
-            NextNumber = NextNumber == "" ? utility.GenerateSeq() : NextNumber;//dt.Year + "" + dt.Month + "" + dt.Day + "" + dt.Hour + "" + dt.Minute + "" + dt.Millisecond.ToString().Substring(0, 2);
+            NextNumber = NextNumber == "" ? utility.GenerateSeq("Donations") : NextNumber;//dt.Year + "" + dt.Month + "" + dt.Day + "" + dt.Hour + "" + dt.Minute + "" + dt.Millisecond.ToString().Substring(0, 2);
             txtSLNo.Text = NextNumber;
             SelectedItem = null;
             IsDonationEdit = false;
@@ -276,6 +290,11 @@ namespace DonationManagement
                 LoadData();
                 btnSqlSettings.IsEnabled = (LoginUser.Role == "Admin" ? true : false);
                 txtPassword.Password = "";
+                InitializeConsts();
+            }
+            else
+            {
+                MessageBox.Show("Please Enetr Valid User Name Password.");
             }
         }
 
@@ -346,8 +365,8 @@ namespace DonationManagement
             string expenseQuery = "Select * from Expenses ORDER BY Created DESC";
             DataTable dtd = db.GetDataTable(expenseQuery);
             List<Expense> liexp = dtd.DataTableToList<Expense>();
-            if (liexp.Count > 0)
-                grdExpenses.ItemsSource = liexp;
+            //  if (liexp.Count > 0)
+            grdExpenses.ItemsSource = liexp;
         }
 
         private void btnReports_Click(object sender, RoutedEventArgs e)
@@ -398,57 +417,57 @@ namespace DonationManagement
 
         private void BtnExpenseSave_Click(object sender, RoutedEventArgs e)
         {
-            DateTime sd;
-            if (txtExpName.Text == "" || txtExpAmount.Text == "" || txtEReason.Text == "" || dpexpDate.Text == "")
-            {
-                MessageBox.Show("Please Enter Name,Date, Amount, Reason ");
-                return;
-            }
-            else if (!DateTime.TryParse(dpexpDate.Text, out sd))
-            {
-                MessageBox.Show("Please Enter Correct Date (dd/mm/yyyy)");
-                return;
-            }
+            /*   DateTime sd;
+               if (txtExpName.Text == "" || txtExpAmount.Text == "" || txtEReason.Text == "" || dpexpDate.Text == "")
+               {
+                   MessageBox.Show("Please Enter Name,Date, Amount, Reason ");
+                   return;
+               }
+               else if (!DateTime.TryParse(dpexpDate.Text, out sd))
+               {
+                   MessageBox.Show("Please Enter Correct Date (dd/mm/yyyy)");
+                   return;
+               }
 
-            db = new SQLiteDatabase();
-            Expense eobj = new Expense();
-            eobj.Amount = Convert.ToDouble(txtExpAmount.Text);
-            eobj.Name = txtExpName.Text;
-            eobj.Edate = dpexpDate.Text;
-            eobj.Reason = txtEReason.Text;
-            eobj.Comment = txtEComment.Text;
-            if (IsExpEdit)
-            {
-                eobj.Modified = Convert.ToString(DateTime.Now);
-                eobj.ModifiedBy = LoginUser.UName;
-                eobj.Created = SelectedExpenseItem.Created;
-                eobj.CreatedBy = SelectedExpenseItem.CreatedBy;
-                Dictionary<string, string> dic1 = GetTypePropertyValues<Expense>(eobj);
-                string s = db.Update("Expenses", dic1, " ID =" + Convert.ToString(SelectedExpenseItem.ID) + "");
-                db.ExecuteNonQuery(s);
-            }
-            else
-            {
-                eobj.Created = Convert.ToString(DateTime.Now);
-                eobj.CreatedBy = LoginUser.UName;
-                Dictionary<string, string> dic1 = GetTypePropertyValues<Expense>(eobj);
-                string s = db.Insert("Expenses", dic1);
-                db.ExecuteNonQuery(s);
+               db = new SQLiteDatabase();
+               Expense eobj = new Expense();
+               eobj.AmountPaid = Convert.ToDecimal(txtExpAmount.Text);
+               eobj.VendorName = txtExpName.Text;
+               eobj.ExpDate = dpexpDate.Text;
+               eobj.Reason = txtEReason.Text;
+               eobj.Comments = txtEComment.Text;
+               if (IsExpEdit)
+               {
+                   eobj.Modified = Convert.ToString(DateTime.Now);
+                   eobj.ModifiedBy = LoginUser.UName;
+                   eobj.Created = SelectedExpenseItem.Created;
+                   eobj.CreatedBy = SelectedExpenseItem.CreatedBy;
+                   Dictionary<string, string> dic1 = GetTypePropertyValues<Expense>(eobj);
+                   string s = db.Update("Expenses", dic1, " ID =" + Convert.ToString(SelectedExpenseItem.ID) + "");
+                   db.ExecuteNonQuery(s);
+               }
+               else
+               {
+                   eobj.Created = Convert.ToString(DateTime.Now);
+                   eobj.CreatedBy = LoginUser.UName;
+                   Dictionary<string, string> dic1 = GetTypePropertyValues<Expense>(eobj);
+                   string s = db.Insert("Expenses", dic1);
+                   db.ExecuteNonQuery(s);
 
-            }
-            SelectedExpenseItem = null;
-            IsExpEdit = false;
-            LoadExpenses();
-            FillExpenseForm(new Expense());
+               }
+               SelectedExpenseItem = null;
+               IsExpEdit = false;
+               LoadExpenses();
+               FillExpenseForm(new Expense());*/
         }
 
         private void FillExpenseForm(Expense eobj)
         {
-            txtExpAmount.Text = Convert.ToString(eobj.Amount);
-            txtExpName.Text = eobj.Name;
-            dpexpDate.Text = string.IsNullOrEmpty(eobj.Edate) ? DateTime.Now.ToShortDateString() : eobj.Edate;
-            txtEReason.Text = eobj.Reason;
-            txtEComment.Text = eobj.Comment;
+            /* txtExpAmount.Text = Convert.ToString(eobj.AmountPaid);
+             txtExpName.Text = eobj.VendorName;
+             dpexpDate.Text = string.IsNullOrEmpty(eobj.ExpDate) ? DateTime.Now.ToShortDateString() : eobj.ExpDate;
+             txtEReason.Text = eobj.Reason;
+             txtEComment.Text = eobj.Comments;*/
         }
 
         private void btnExpCancel_Click(object sender, RoutedEventArgs e)
@@ -461,11 +480,13 @@ namespace DonationManagement
         WebBrowser wb;
         private void btnPrint_Click(object sender, RoutedEventArgs e)
         {
-            // String html = "<html><title></Title><head>< style >body { height: 842px;  width: 595px; margin - left: auto; margin - right: auto; } </ style ></head><body></body></html>";
             wb = new WebBrowser();
-            string tpath = Directory.GetCurrentDirectory() + @"\PrintTemplate.html";
+            string excdir = Directory.GetCurrentDirectory()+@"\Templates";
+            string tpath = excdir + @"\PrintTemplate.html";
+            string imgPath = excdir + @"\Receipt.png";
             StreamReader sr = new StreamReader(tpath);
             string html = sr.ReadToEnd();
+            html = html.Replace("@img@", imgPath);
             SelectedItem = grdDonations.SelectedItem as Donation;
             if (SelectedItem != null)
             {
@@ -482,6 +503,31 @@ namespace DonationManagement
             }
 
 
+        }
+
+        private void btnPrintExp_Click(object sender, RoutedEventArgs e)
+        {
+            wb = new WebBrowser();
+            string excdir = Directory.GetCurrentDirectory() + @"\Templates";
+            string tpath = excdir + @"\VocherTemplate.html";
+            string imgPath = excdir + @"\Vocher.png";
+            StreamReader sr = new StreamReader(tpath);
+            string html = sr.ReadToEnd();
+            html = html.Replace("@img@", imgPath);
+            Expense exp = grdExpenses.SelectedItem as Expense;
+            if (exp != null)
+            {
+                html = html.Replace("@ReceiptNo@", Convert.ToString(exp.ExpenseNo)).Replace("@date@", exp.ExpDate.Substring(0, 11)).Replace("@Name@", exp.Reason)
+                    .Replace("@AmountWords@", NumberToWords((int)exp.AmountPaid) + " only").Replace("@DD@", exp.TxnType).Replace("@Amount@", Convert.ToString(exp.AmountPaid) + "/-");
+                wb.NavigateToString(html);
+                sr.Close();
+                wb.Navigated += Wb_Navigated;
+            }
+            else
+            {
+                wb = null;
+                MessageBox.Show("Pleases select item to print", "Print");
+            }
         }
 
         private void Wb_Navigated(object sender, NavigationEventArgs e)
@@ -505,14 +551,14 @@ namespace DonationManagement
 
             if ((number / 100000) > 0)
             {
-                words += NumberToWords(number / 100000) + " million ";
+                words += NumberToWords(number / 100000) + " lacks ";
                 number %= 100000;
             }
 
-            if ((number / 100) > 0)
+            if ((number / 1000) > 0)
             {
-                words += NumberToWords(number / 100) + " thousand ";
-                number %= 100;
+                words += NumberToWords(number / 1000) + " thousand ";
+                number %= 1000;
             }
 
             if ((number / 100) > 0)
@@ -659,7 +705,6 @@ namespace DonationManagement
         private void txtREName_TextChanged(object sender, TextChangedEventArgs e)
         {
             btnRELoad_Click(null, null);
-
         }
 
 
@@ -776,6 +821,152 @@ namespace DonationManagement
         private void btnClean_Click(object sender, RoutedEventArgs e)
         {
             txtQuery.Text = "VACUUM;";
+        }
+
+        private void FillComboBox<T>(ComboBox cb, List<T> data, string ValueMember, string displayMember)
+        {
+            cb.ItemsSource = data;
+            cb.DisplayMemberPath = displayMember;
+            cb.SelectedValuePath = ValueMember;
+        }
+        private void btnAddExp_Click(object sender, RoutedEventArgs e)
+        {
+            AddExpenses.Background = new SolidColorBrush(Colors.AliceBlue);
+            AddExpenses.Visibility = Visibility.Visible;
+            Expenses expnses = new Expenses();
+            expnses.SaveButtonClick += Expnses_SaveButtonClick;
+            expnses.CancelButtonClick += Expnses_CancelButtonClick;
+            AddExpenses.Children.Add(expnses);
+
+        }
+
+        private void Expnses_CancelButtonClick(object sender, EventArgs e)
+        {
+            AddExpenses.Visibility = Visibility.Collapsed;
+
+        }
+
+        private void Expnses_SaveButtonClick(object sender, EventArgs e)
+        {
+            AddExpenses.Visibility = Visibility.Collapsed;
+            Expense exp = ((sender as Expenses).DataContext as Expense);
+            LoadExpenses();
+        }
+
+        private void EditExp_Click(object sender, RoutedEventArgs e)
+        {
+            AddExpenses.Background = new SolidColorBrush(Colors.AliceBlue);
+            if (grdExpenses.SelectedItem != null)
+            {
+                AddExpenses.Visibility = Visibility.Visible;
+                Expenses expnses = new Expenses(grdExpenses.SelectedItem as Expense);
+                expnses.SaveButtonClick += Expnses_SaveButtonClick;
+                expnses.CancelButtonClick += Expnses_CancelButtonClick;
+                AddExpenses.Children.Add(expnses);
+
+            }
+        }
+
+
+        private void btnDeleteExp_Click(object sender, RoutedEventArgs e)
+        {
+            if (grdExpenses.SelectedItem != null)
+            {
+                SelectedExpenseItem = grdExpenses.SelectedItem as Expense;
+                MessageBoxResult dialogResult = MessageBox.Show("Are you sure you want to delete the Expense +", "Delete Expense", MessageBoxButton.YesNo);
+
+                if (dialogResult == MessageBoxResult.Yes)
+                {
+
+                    if (SelectedExpenseItem != null)
+                    {
+                        string sql = "DELETE FROM EXPENSES where ID ='" + SelectedExpenseItem.ID + "'";
+                        db = new SQLiteDatabase();
+                        db.ExecuteNonQuery(sql);
+                        MessageBox.Show("Expense deleted");
+                        SelectedExpenseItem = null;
+                        LoadExpenses();
+                    }
+                }
+            }
+        }
+
+        private void btnPrintExp_Click1(object sender, RoutedEventArgs e)
+        {
+            string tpath = Directory.GetCurrentDirectory() + @"\ExpenseVocher.html";
+            StreamReader sr = new StreamReader(tpath);
+            string html = sr.ReadToEnd();
+            string FinalHtml = string.Empty;
+            string printhtml = @"<tr style='border: 1px solid black'>
+                 <td colspan = '4' style = ''><span> @Ttitle </span></td>    
+                    <td colspan = '2' ><span> @Debit </span></td>     
+                     <td colspan = '2'><span> @Credit </span></td>      
+                  </tr>";
+            List<string> strFundTypeArr = new List<string>();
+            decimal totalamt = 0;
+            if (grdExpenses.SelectedItems.Count > 0)
+            {
+                List<Expense> expitems = new List<Expense>();
+                foreach (var item in grdExpenses.SelectedItems)
+                {
+                    Expense exp = item as Expense;
+                    expitems.Add(exp);
+                    if (strFundTypeArr.IndexOf(exp.FundType) <= -1)
+                        strFundTypeArr.Add(exp.FundType);
+                }
+                
+                foreach (var Ftype in strFundTypeArr)
+                {
+                    decimal amount = 0;
+                    foreach (Expense item in expitems)
+                    {
+                        if (Ftype == item.FundType)
+                        {
+                            FinalHtml += printhtml.Replace("@Credit", Convert.ToString(item.AmountPaid)).Replace("@Ttitle", Convert.ToString(item.Reason)).Replace("@Debit", "");
+                            amount += item.AmountPaid;
+                        }
+                    }
+                    totalamt += amount;
+                    FinalHtml += printhtml.Replace("@Debit", Convert.ToString(amount)).Replace("@Ttitle", Convert.ToString(Ftype)).Replace("@Credit", ""); ;
+                }
+                string totalline= printhtml.Replace("@Debit", Convert.ToString(totalamt)).Replace("@Ttitle", "<b>Total Amount:</b>").Replace("@Credit", Convert.ToString(totalamt)); ;
+                html = html.Replace(" @LineItems", FinalHtml);
+                html = html.Replace(" @TotalLine", totalline);
+               
+            }
+            html = html.Replace("@Amountinwards", NumberToWords((int)totalamt));
+            html = html.Replace("@UserId", LoginUser.UName);
+
+
+            //string tpath = Directory.GetCurrentDirectory() + @"\ExpenseVocher.html";
+            //StreamReader sr = new StreamReader(tpath);
+            //string html = sr.ReadToEnd();
+            // SelectedItem = //grdDonations.SelectedItem as Donation;
+            if (true)
+            {
+                wb = new WebBrowser();
+                //    html = html.Replace("@ReceiptNo@", Convert.ToString(SelectedItem.ReceiptNo)).Replace("@date@", SelectedItem.Ddate.Substring(0, 11)).Replace("@Name@", SelectedItem.Name)
+                //        .Replace("@AmountWords@", NumberToWords((int)SelectedItem.Amount) + " only").Replace("@DD@", SelectedItem.BTNo).Replace("@Amount@", Convert.ToString(SelectedItem.Amount) + "/-");
+                wb.NavigateToString(html);
+                sr.Close();
+                wb.Navigated += Wb_Navigated;
+            }
+            else
+            {
+                wb = null;
+                MessageBox.Show("Pleases select item to print", "Print");
+            }
+
+
+
+        }
+
+        private void txtPassword_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (Convert.ToInt16(e.Key) == 6)
+            {
+                btnLogin_Click(sender, e);
+            }
         }
     }
 }
