@@ -60,6 +60,7 @@ namespace DonationManagement
         private void BtnExpSave_Click(object sender, RoutedEventArgs e)
         {
             Expense exp = this.DataContext as Expense;
+            exp.ExpenseNo = txtExpNo.Text;
             SQLiteDatabase db = new SQLiteDatabase();
             Expense eobj = exp;
             eobj.FundType =Convert.ToString(cbExpFundType.SelectedValue);

@@ -63,7 +63,7 @@ namespace DonationManagement
         public int Amount { get; set; }
     }
 
-   public class Expense
+    public class Expense
     {
 
         public int ID { get; set; }
@@ -103,10 +103,11 @@ namespace DonationManagement
         public string AccountNo { get; set; }
         public string Comments { get; set; }
         public bool IsDefault { get; set; }
-
+        public string BankName { get; set; }
+        public string IFSCCode { get; set; }
     }
 
-   public static class AppGlobalData
+    public static class AppGlobalData
     {
         public static List<FundTypes> lifundTypes { get; set; }
         public static List<TransactionType> liTxnTypes { get; set; }

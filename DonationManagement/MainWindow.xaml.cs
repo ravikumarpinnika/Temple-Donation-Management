@@ -35,7 +35,7 @@ namespace DonationManagement
         bool IsExpEdit = false;
         Utility utility = new Utility();
         string NextNumber = "";
-       
+
         bool pageLoaded;
 
         public MainWindow()
@@ -263,6 +263,7 @@ namespace DonationManagement
 
         private void btnSqlSettings_Click(object sender, RoutedEventArgs e)
         {
+
             HideStackPanels();
             splQueryeditor.Visibility = Visibility.Visible;
         }
@@ -270,8 +271,10 @@ namespace DonationManagement
         private void btnDonationHome_Click(object sender, RoutedEventArgs e)
         {
             HideStackPanels();
+            Misc.Visibility = Visibility.Collapsed;
             splDonations.Visibility = Visibility.Visible;
             stkAddDonations.Visibility = Visibility.Visible;
+            splAddDonation.Visibility = Visibility.Collapsed;
         }
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)
@@ -389,6 +392,8 @@ namespace DonationManagement
             {
                 sp.Visibility = Visibility.Collapsed;
             }
+            Misc.Visibility = Visibility.Collapsed;
+            stpMisc.Visibility = Visibility.Collapsed;
         }
 
         private void btnLogout_Click(object sender, RoutedEventArgs e)
@@ -481,7 +486,7 @@ namespace DonationManagement
         private void btnPrint_Click(object sender, RoutedEventArgs e)
         {
             wb = new WebBrowser();
-            string excdir = Directory.GetCurrentDirectory()+@"\Templates";
+            string excdir = Directory.GetCurrentDirectory() + @"\Templates";
             string tpath = excdir + @"\PrintTemplate.html";
             string imgPath = excdir + @"\Receipt.png";
             StreamReader sr = new StreamReader(tpath);
@@ -501,8 +506,6 @@ namespace DonationManagement
                 wb = null;
                 MessageBox.Show("Pleases select item to print", "Print");
             }
-
-
         }
 
         private void btnPrintExp_Click(object sender, RoutedEventArgs e)
@@ -515,10 +518,17 @@ namespace DonationManagement
             string html = sr.ReadToEnd();
             html = html.Replace("@img@", imgPath);
             Expense exp = grdExpenses.SelectedItem as Expense;
+            SQLiteDatabase db = new SQLiteDatabase();
+            string expenseQuery = "Select * from EXPENSES e inner join FundType f on e.FundType=f.Fundtype where e.ID=" + exp.ID;
+            DataTable dtd = db.GetDataTable(expenseQuery);
             if (exp != null)
             {
-                html = html.Replace("@ReceiptNo@", Convert.ToString(exp.ExpenseNo)).Replace("@date@", exp.ExpDate.Substring(0, 11)).Replace("@Name@", exp.Reason)
-                    .Replace("@AmountWords@", NumberToWords((int)exp.AmountPaid) + " only").Replace("@DD@", exp.TxnType).Replace("@Amount@", Convert.ToString(exp.AmountPaid) + "/-");
+                html = html.Replace("@ReceiptNo@", Convert.ToString(exp.ExpenseNo)).Replace("@date@", exp.ExpDate.Substring(0, 10)).Replace("@Name@", exp.Reason)
+                    .Replace("@AmountWords@", NumberToWords((int)exp.AmountPaid) + " only").Replace("@DD@", exp.TxnRefNo).Replace("@Amount@", Convert.ToString(exp.AmountPaid) + "/-");
+                html = html.Replace("@FUNDTYPE@", GetField(dtd.Rows[0], "FundType"));
+                html = html.Replace("@Bank@", GetField(dtd.Rows[0], "BankName"));
+                html = html.Replace("@Dated@", exp.ExpDate.Substring(0, 10));
+                html = html.Replace("@Debit@", GetField(dtd.Rows[0], "AccountNo"));
                 wb.NavigateToString(html);
                 sr.Close();
                 wb.Navigated += Wb_Navigated;
@@ -528,6 +538,11 @@ namespace DonationManagement
                 wb = null;
                 MessageBox.Show("Pleases select item to print", "Print");
             }
+        }
+
+        public string GetField(DataRow dr, string columnName)
+        {
+            return Convert.ToString(dr.Field<string>(columnName));
         }
 
         private void Wb_Navigated(object sender, NavigationEventArgs e)
@@ -632,31 +647,41 @@ namespace DonationManagement
 
         private void btnRDLoad_Click(object sender, RoutedEventArgs e)
         {
-            if (dpRDFrom.Text == "" || dpRDTo.Text == "")
+            try
             {
-                MessageBox.Show("Please select date");
-                return;
+
+
+                if (dpRDFrom.Text == "" || dpRDTo.Text == "")
+                {
+                    MessageBox.Show("Please select date");
+                    return;
+                }
+                string dtfrom = Convert.ToDateTime(dpRDFrom.Text).ToString("MM/dd/yyyy");
+                string dtto = Convert.ToDateTime(dpRDTo.Text).ToString("MM/dd/yyyy");
+
+                db = new SQLiteDatabase();
+                string expenseQuery = "Select * from Donations where Created BETWEEN '" + dtfrom + " 00:00:00 AM' AND '" + dtto + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtRDName.Text) ? "" : "AND Name Like '%" + txtRDName.Text + "%'") + " ORDER BY Created DESC";
+                // DataTable dtd = db.GetDataTable(expenseQuery);
+                List<Donation> lidon = db.GetDataList<Donation>(expenseQuery); //dtd.DataTableToList<Donation>();
+                grdRepDonations.ItemsSource = lidon;
+
+                string countqry = "Select Count(*) as Count,SUM(Amount) as Total from Donations where Created BETWEEN '" + dtfrom + " 00:00:00 AM' AND '" + dtto + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtRDName.Text) ? "" : "AND Name Like '%" + txtRDName.Text + "%'");
+                DataTable ctd = db.GetDataTable(countqry);
+                if (ctd.Rows.Count > 0)
+                {
+                    lblDrows.Content = Convert.ToString(ctd.Rows[0]["Count"] != DBNull.Value ? ctd.Rows[0].Field<Int64>("Count") : 0);
+                    lblDTotal.Content = Convert.ToString(ctd.Rows[0]["Total"] != DBNull.Value ? ctd.Rows[0].Field<Int64>("Total") : 0);
+                }
+                else
+                {
+                    lblDrows.Content = lblDTotal.Content = "0";
+
+                }
             }
-            string dtfrom = Convert.ToDateTime(dpRDFrom.Text).ToString("MM/dd/yyyy");
-            string dtto = Convert.ToDateTime(dpRDTo.Text).ToString("MM/dd/yyyy");
-
-            db = new SQLiteDatabase();
-            string expenseQuery = "Select * from Donations where Created BETWEEN '" + dtfrom + " 00:00:00 AM' AND '" + dtto + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtRDName.Text) ? "" : "AND Name Like '%" + txtRDName.Text + "%'") + " ORDER BY Created DESC";
-            // DataTable dtd = db.GetDataTable(expenseQuery);
-            List<Donation> lidon = db.GetDataList<Donation>(expenseQuery); //dtd.DataTableToList<Donation>();
-            grdRepDonations.ItemsSource = lidon;
-
-            string countqry = "Select Count(*) as Count,SUM(Amount) as Total from Donations where Created BETWEEN '" + dtfrom + " 00:00:00 AM' AND '" + dtto + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtRDName.Text) ? "" : "AND Name Like '%" + txtRDName.Text + "%'");
-            DataTable ctd = db.GetDataTable(countqry);
-            if (ctd.Rows.Count > 0)
+            catch (Exception ex)
             {
-                lblDrows.Content = Convert.ToString(ctd.Rows[0]["Count"] != DBNull.Value ? ctd.Rows[0].Field<Int64>("Count") : 0);
-                lblDTotal.Content = Convert.ToString(ctd.Rows[0]["Total"] != DBNull.Value ? ctd.Rows[0].Field<Int64>("Total") : 0);
-            }
-            else
-            {
-                lblDrows.Content = lblDTotal.Content = "0";
 
+               
             }
         }
 
@@ -831,6 +856,7 @@ namespace DonationManagement
         }
         private void btnAddExp_Click(object sender, RoutedEventArgs e)
         {
+            AddExpenses.Children.Clear();
             AddExpenses.Background = new SolidColorBrush(Colors.AliceBlue);
             AddExpenses.Visibility = Visibility.Visible;
             Expenses expnses = new Expenses();
@@ -843,7 +869,7 @@ namespace DonationManagement
         private void Expnses_CancelButtonClick(object sender, EventArgs e)
         {
             AddExpenses.Visibility = Visibility.Collapsed;
-
+            AddExpenses.Children.Clear();
         }
 
         private void Expnses_SaveButtonClick(object sender, EventArgs e)
@@ -851,6 +877,7 @@ namespace DonationManagement
             AddExpenses.Visibility = Visibility.Collapsed;
             Expense exp = ((sender as Expenses).DataContext as Expense);
             LoadExpenses();
+            AddExpenses.Children.Clear();
         }
 
         private void EditExp_Click(object sender, RoutedEventArgs e)
@@ -858,6 +885,7 @@ namespace DonationManagement
             AddExpenses.Background = new SolidColorBrush(Colors.AliceBlue);
             if (grdExpenses.SelectedItem != null)
             {
+                AddExpenses.Children.Clear();
                 AddExpenses.Visibility = Visibility.Visible;
                 Expenses expnses = new Expenses(grdExpenses.SelectedItem as Expense);
                 expnses.SaveButtonClick += Expnses_SaveButtonClick;
@@ -914,7 +942,7 @@ namespace DonationManagement
                     if (strFundTypeArr.IndexOf(exp.FundType) <= -1)
                         strFundTypeArr.Add(exp.FundType);
                 }
-                
+
                 foreach (var Ftype in strFundTypeArr)
                 {
                     decimal amount = 0;
@@ -929,10 +957,10 @@ namespace DonationManagement
                     totalamt += amount;
                     FinalHtml += printhtml.Replace("@Debit", Convert.ToString(amount)).Replace("@Ttitle", Convert.ToString(Ftype)).Replace("@Credit", ""); ;
                 }
-                string totalline= printhtml.Replace("@Debit", Convert.ToString(totalamt)).Replace("@Ttitle", "<b>Total Amount:</b>").Replace("@Credit", Convert.ToString(totalamt)); ;
+                string totalline = printhtml.Replace("@Debit", Convert.ToString(totalamt)).Replace("@Ttitle", "<b>Total Amount:</b>").Replace("@Credit", Convert.ToString(totalamt)); ;
                 html = html.Replace(" @LineItems", FinalHtml);
                 html = html.Replace(" @TotalLine", totalline);
-               
+
             }
             html = html.Replace("@Amountinwards", NumberToWords((int)totalamt));
             html = html.Replace("@UserId", LoginUser.UName);
@@ -966,6 +994,75 @@ namespace DonationManagement
             if (Convert.ToInt16(e.Key) == 6)
             {
                 btnLogin_Click(sender, e);
+            }
+        }
+
+        private void btnMisc_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var x in MainGrid.Children.OfType<StackPanel>())
+            {
+                x.Visibility = Visibility.Collapsed;
+            }
+            Misc.Visibility = Visibility.Visible;
+            string sql = "Select * from FundType";
+            db = new SQLiteDatabase();
+            List<FundTypes> ft = db.GetDataList<FundTypes>(sql);
+            grdFundtype.ItemsSource = ft;
+            stpMisc.Children.Clear();
+            stpMisc.Visibility = Visibility.Collapsed;
+        }
+
+        private void btnAddFund_Click(object sender, RoutedEventArgs e)
+        {
+            stpMisc.Visibility = Visibility.Visible;
+            FundTypesUC fuc = new FundTypesUC();
+            stpMisc.Children.Add(fuc);
+            Misc.Visibility = Visibility.Collapsed;
+            fuc.SaveButtonClick += Fuc_SaveButtonClick;
+            fuc.CancelButtonClick += Fuc_CancelButtonClick;
+        }
+
+        private void btnEditFund_Click(object sender, RoutedEventArgs e)
+        {
+            FundTypes ft = grdFundtype.SelectedItem as FundTypes;
+            if (ft != null)
+            {
+                stpMisc.Visibility = Visibility.Visible;
+                FundTypesUC fuc = new FundTypesUC(ft);
+                stpMisc.Children.Add(fuc);
+                Misc.Visibility = Visibility.Collapsed;
+                fuc.SaveButtonClick += Fuc_SaveButtonClick;
+                fuc.CancelButtonClick += Fuc_CancelButtonClick;
+            }
+        }
+
+        private void Fuc_CancelButtonClick(object sender, EventArgs e)
+        {
+            btnMisc_Click(null, null);
+        }
+
+        private void Fuc_SaveButtonClick(object sender, EventArgs e)
+        {
+            btnMisc_Click(null, null);
+        }
+
+        private void btnDeleteFund_Click(object sender, RoutedEventArgs e)
+        {
+            FundTypes ft = grdFundtype.SelectedItem as FundTypes;
+            if (ft != null)
+            {
+                MessageBoxResult dialogResult = MessageBox.Show("Are you sure you want to delete the Fund Type +", "Delete Fund Type", MessageBoxButton.YesNo);
+                if (dialogResult == MessageBoxResult.Yes)
+                {
+
+
+                    string sql = "DELETE FROM FundType where ID ='" + ft.Id + "'";
+                    db = new SQLiteDatabase();
+                    db.ExecuteNonQuery(sql);
+                    MessageBox.Show("FundType deleted");
+
+                    btnMisc_Click(null, null);
+                }
             }
         }
     }

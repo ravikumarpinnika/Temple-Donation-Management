@@ -90,12 +90,19 @@
     <Compile Include="Expenses.xaml.cs">
       <DependentUpon>Expenses.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FundTypesUC.xaml.cs">
+      <DependentUpon>FundTypesUC.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Invoice.xaml.cs">
       <DependentUpon>Invoice.xaml</DependentUpon>
     </Compile>
     <Compile Include="SQLliteHelper.cs" />
     <Compile Include="Utilitys.cs" />
     <Page Include="Expenses.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FundTypesUC.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

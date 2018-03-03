@@ -173,11 +173,11 @@
 
                 </Grid>
             </StackPanel>
-            <StackPanel Name="SplExpences" HorizontalAlignment="Left" Visibility="visible"  Margin="162,0,-4,0" VerticalAlignment="Top" MinWidth="1050" MinHeight="500" Grid.ColumnSpan="2" Height="672">
+            <StackPanel Name="SplExpences" HorizontalAlignment="Left" Visibility="Collapsed"  Margin="162,0,-4,0" VerticalAlignment="Top" MinWidth="1050" MinHeight="500" Grid.ColumnSpan="2" Height="672">
                 <Grid Margin="0,0,0,0" Height="674">
                     <DataGrid Margin="0,60,4.6,2" SelectionMode="Single" Name="grdExpenses" CanUserAddRows="false" ColumnHeaderHeight="28" RowHeight="28" RowStyle="{StaticResource rowStyle}" CellStyle="{StaticResource cellStyle}"  AutoGenerateColumns="False" AlternatingRowBackground="AliceBlue" BorderThickness="0">
                         <DataGrid.Columns>
-                           
+
                             <DataGridTextColumn Header="Expense No" Binding="{Binding ID}" />
                             <DataGridTextColumn Header="Date" Binding="{Binding ExpDate}"   />
                             <DataGridTextColumn Header="Name" Binding="{Binding VendorName}" />
@@ -223,9 +223,9 @@
                     </Canvas>
 
                     <StackPanel Name="AddExpenses" Visibility="Collapsed" Margin="0,0,0,0" Panel.ZIndex="10" >
-                       
+
                     </StackPanel>
-                    
+
                     <!--<Label Content="Exp Name :" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="79" Height="26"/>
                     <TextBox HorizontalAlignment="Left" Height="26" x:Name="txtExpName" Margin="85,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="311"/>
                     <Label Content="Amount(Rs) :" HorizontalAlignment="Left" Margin="667,10,0,0"  VerticalAlignment="Top" Width="95" Height="26"/>
@@ -322,16 +322,33 @@
                     </TabControl>
 
                 </Grid>
-
+            </StackPanel>
+            <Button Content="Misc" x:Name="btnMisc"  HorizontalAlignment="Left" Height="31" Margin="8,163,0,0" VerticalAlignment="Top" Width="132" RenderTransformOrigin="0.448,4.171" Click="btnMisc_Click" />
+            <Button Content="Logout" x:Name="btnLogout"  HorizontalAlignment="Left" Height="31" Margin="8,198,0,0" VerticalAlignment="Top" Width="132" RenderTransformOrigin="0.448,4.171" Click="btnLogout_Click"/>
+            <Grid  Name="Misc"  Visibility="collapsed" Grid.ColumnSpan="2" Margin="162,0,5,2">
+                <DataGrid x:Name="grdFundtype" Margin="0,50,0,0" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="FundType" Binding="{Binding FundType}" />
+                        <DataGridTextColumn Header="Acc No" Binding="{Binding AccountNo}" />
+                        <DataGridTextColumn Header="Bank Name" Binding="{Binding BankName}" />
+                        <DataGridTextColumn Header="IFSC Code" Binding="{Binding IFSCCode}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Button Content="Add" x:Name="btnAddFund"  HorizontalAlignment="Left" Height="28" Margin="36,11,0,0" VerticalAlignment="Top" Width="75" Click="btnAddFund_Click"/>
+                <Button Content="Edit" x:Name="btnEditFund"  HorizontalAlignment="Left" Height="28" Margin="118,11,0,0" VerticalAlignment="Top" Width="75" Click="btnEditFund_Click"/>
+                <Button Content="Delete" x:Name="btnDeleteFund"  HorizontalAlignment="Left" Height="28" Margin="200,11,0,0" VerticalAlignment="Top" Width="75" Click="btnDeleteFund_Click"/>
+               
+            </Grid>
+            <StackPanel x:Name="stpMisc" Grid.ColumnSpan="2" Margin="162,0,5,2" Visibility="Collapsed">
 
             </StackPanel>
-            <Button Content="Logout" x:Name="btnLogout"  HorizontalAlignment="Left" Height="31" Margin="8,163,0,0" VerticalAlignment="Top" Width="132" RenderTransformOrigin="0.448,4.171" Click="btnLogout_Click"/>
         </Grid>
-        <Grid  Name="LoginGrid"  Visibility="Collapsed">
+        <Grid  Name="LoginGrid"  Visibility="Visible">
 
         </Grid>
+       
 
-        <Canvas Height="248" Margin="330,150,314.6,0">
+        <Canvas Height="248" Margin="330,150,314.6,0" Visibility="Visible">
             <Canvas.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="Black" Offset="0.125"/>
@@ -340,9 +357,9 @@
             </Canvas.Background>
             <Label Content="Login" Canvas.Left="185" Width="77" FontSize="18" FontWeight="Bold" Foreground="White" Canvas.Top="10"/>
             <Label Content="User Name:" HorizontalAlignment="Left" Height="28" Width="93" Foreground="#FFF7ECEC" FontWeight="Bold" Canvas.Left="63" Canvas.Top="67" FontSize="14"/>
-            <TextBox Height="28" Canvas.Left="161" TextWrapping="Wrap"  Canvas.Top="67" Width="216" Name="txtUname" Text=""/>
+            <TextBox Height="28" Canvas.Left="161" TextWrapping="Wrap"  Canvas.Top="67" Width="216" Name="txtUname" Text="Admin"/>
             <Label Content="Password:" HorizontalAlignment="Left" Height="28" Width="93" Foreground="#FFF7ECEC" FontWeight="Bold" Canvas.Left="63" Canvas.Top="114" FontSize="14"/>
-            <PasswordBox Height="28" Canvas.Left="161" PasswordChar="*"  Canvas.Top="114" Width="216" Name="txtPassword" Password="" KeyUp="txtPassword_KeyUp"  />
+            <PasswordBox Height="28" Canvas.Left="161" PasswordChar="*"  Canvas.Top="114" Width="216" Name="txtPassword" Password="Admin@123" KeyUp="txtPassword_KeyUp"  />
             <Button Content="Login" Name="btnLogin"  HorizontalAlignment="Left" Height="28" Width="88" Canvas.Left="289" Canvas.Top="165" FontSize="14" FontWeight="Bold" Click="btnLogin_Click"/>
         </Canvas>
 

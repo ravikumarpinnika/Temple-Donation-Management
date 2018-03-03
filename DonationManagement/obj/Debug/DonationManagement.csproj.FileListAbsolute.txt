@@ -62,3 +62,5 @@ C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\Donati
 C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\DonationManagement.csproj.CoreCompileInputs.cache
 C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\DonationManagement.exe
 C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\DonationManagement.pdb
+C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\FundTypesUC.g.cs
+C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\FundTypesUC.baml
