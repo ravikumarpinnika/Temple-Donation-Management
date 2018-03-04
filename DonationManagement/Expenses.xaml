@@ -13,34 +13,31 @@
         <Canvas Height="530" VerticalAlignment="Bottom">
 
             <Label Content="Exp No:" Canvas.Left="15" Canvas.Top="5" Width="100" Height="25"/>
-            <TextBox Height="23" Canvas.Left="124" TextWrapping="Wrap" Text="{Binding ExpenseNo, Mode=TwoWay}" Name="txtExpNo" Canvas.Top="5" Width="270"/>
+            <TextBox Height="23" Canvas.Left="124" TextWrapping="Wrap" Text="{Binding ExpenseNo, Mode=TwoWay}" IsEnabled="False" Name="txtExpNo" Canvas.Top="5" Width="270"/>
             <Label Content="Vendor Name:" Canvas.Left="15" Canvas.Top="34" Width="100" Height="25"/>
-            <TextBox Height="23" Canvas.Left="124" TextWrapping="Wrap" Text="{Binding VendorName, Mode=TwoWay}" Canvas.Top="34" Width="270"/>
+            <TextBox Height="23" Canvas.Left="124" TextWrapping="Wrap" Text="{Binding VendorName, Mode=TwoWay}" TabIndex="1" Canvas.Top="34" Width="270"/>
             <Label Content="Exp Date:" Canvas.Left="14" Canvas.Top="66" Width="100" Height="25"/>
-            <DatePicker Canvas.Left="124" Canvas.Top="69" Width="270" Text="{Binding ExpDate, Mode=TwoWay}"/>
+            <DatePicker Canvas.Left="124" Canvas.Top="69" x:Name="dpExpDate" Width="270" Text="{Binding ExpDate, Mode=TwoWay}" TabIndex="2"/>
             <Label Content="Amount Paid:" Canvas.Left="15" Canvas.Top="106" Width="100" Height="25"/>
-            <TextBox Height="23" Canvas.Left="124" TextWrapping="Wrap" Text="{Binding AmountPaid, Mode=TwoWay}" Canvas.Top="106" Width="270"/>
+            <TextBox Height="23" Canvas.Left="124" TextWrapping="Wrap" Text="{Binding AmountPaid, Mode=TwoWay}" TabIndex="3" Canvas.Top="106" Width="270"/>
             <Label Content="Reason :" Canvas.Left="15" Canvas.Top="146" Width="100" Height="25"/>
-            <TextBox Height="43" Canvas.Left="124" TextWrapping="Wrap" Text="{Binding Reason , Mode=TwoWay}" Canvas.Top="146" Width="270"/>
+            <TextBox Height="43" Canvas.Left="124" TextWrapping="Wrap" Text="{Binding Reason , Mode=TwoWay}" TabIndex="4" Canvas.Top="146" Width="270"/>
             <Label Content="Vocher No:" Canvas.Left="15" Canvas.Top="199" Width="100"/>
-            <TextBox Height="23" Canvas.Left="124" TextWrapping="Wrap" Text="{Binding VocherNo, Mode=TwoWay}" Canvas.Top="201" Width="270"/>
+            <TextBox Height="23" Canvas.Left="124" TextWrapping="Wrap" Text="{Binding VocherNo, Mode=TwoWay}" TabIndex="5" Canvas.Top="201" Width="270"/>
             <Label Content="Fund:" Canvas.Left="15" Canvas.Top="237" Width="100"/>
-            <ComboBox Canvas.Left="124" Canvas.Top="237" Width="270" Name="cbExpFundType" SelectedItem="{Binding FType}"/>
+            <ComboBox Canvas.Left="124" Canvas.Top="237" Width="270" Name="cbExpFundType" SelectedItem="{Binding FType}" TabIndex="6"/>
             <Label Content="Vndor Bill#:" Canvas.Left="15" Canvas.Top="344" Width="100" Height="25"/>
-            <TextBox Height="23" Canvas.Left="124" TextWrapping="Wrap" Text="{Binding VendorBillNo, Mode=TwoWay}" Canvas.Top="344" Width="270"/>
+            <TextBox Height="23" Canvas.Left="124" TextWrapping="Wrap" TabIndex="9" Text="{Binding VendorBillNo, Mode=TwoWay}" Canvas.Top="344" Width="270"/>
             <Label Content="Vendor Bill Date:" Canvas.Left="18" Canvas.Top="376" Width="100" Height="25"/>
-            <DatePicker Canvas.Left="124" Canvas.Top="378" Width="270" Text="{Binding VendorBillDate, Mode=TwoWay}"/>
+            <DatePicker Canvas.Left="124" Canvas.Top="378" Width="270" TabIndex="10" Text="{Binding VendorBillDate, Mode=TwoWay}"/>
             <Label Content="Ref No:" Canvas.Left="15" Canvas.Top="304" Width="100"/>
-            <TextBox Height="23" Canvas.Left="124" TextWrapping="Wrap" Text="{Binding TxnRefNo, Mode=TwoWay}" Canvas.Top="307" Width="270"/>
+            <TextBox Height="23" Canvas.Left="124" TextWrapping="Wrap" Text="{Binding TxnRefNo, Mode=TwoWay}" TabIndex="8" Canvas.Top="307" Width="270"/>
             <Label Content="Txn Type:" Canvas.Left="11" Canvas.Top="269" Width="100"/>
-            <ComboBox Canvas.Left="124" Canvas.Top="269" Width="270" Name="cbTxnType"/>
+            <ComboBox Canvas.Left="124" Canvas.Top="269" Width="270" Name="cbTxnType" TabIndex="7"/>
             <Label Content="Comments:" Canvas.Left="19" Canvas.Top="414" Width="100"/>
-            <TextBox Height="80" Canvas.Left="124" TextWrapping="Wrap" Text="{Binding Comment, Mode=TwoWay}" Name="txtEComments" Canvas.Top="414" Width="270"/>
-            <Button Content="Save" Name="BtnExpSave" Canvas.Left="237" Canvas.Top="503" Width="74" Click="BtnExpSave_Click"/>
-            <Button Content="Cancel" Canvas.Left="317" Canvas.Top="503" Width="74" Name="btnExpCancel" Click="btnExpCancel_Click" RenderTransformOrigin="-0.461,0.463"/>
-
-
-
+            <TextBox Height="80" Canvas.Left="124" TextWrapping="Wrap" TabIndex="11" Text="{Binding Comment, Mode=TwoWay}" Name="txtEComments" Canvas.Top="414" Width="270"/>
+            <Button Content="Save" Name="BtnExpSave" Canvas.Left="237" TabIndex="12" Canvas.Top="503" Width="74" Click="BtnExpSave_Click"/>
+            <Button Content="Cancel" Canvas.Left="317" Canvas.Top="503" TabIndex="13" Width="74" Name="btnExpCancel" Click="btnExpCancel_Click" RenderTransformOrigin="-0.461,0.463"/>
         </Canvas>
     </Grid>
 </UserControl>

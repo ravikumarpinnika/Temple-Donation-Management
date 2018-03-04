@@ -57,7 +57,7 @@
             <Button Content="SQL" Name="btnSqlSettings"  HorizontalAlignment="Left" Height="31" Margin="8,127,0,0" VerticalAlignment="Top" Width="132" RenderTransformOrigin="0.448,4.171" Click="btnSqlSettings_Click"/>
             <Rectangle Grid.ColumnSpan="1" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="672" Margin="150,0,0,0" Stroke="Black" VerticalAlignment="Top" Width="3"/>
             <StackPanel Grid.Column="1" Name="stkAddDonations"  Margin="0,10,0,0" VerticalAlignment="Top" Visibility="Collapsed" >
-                <StackPanel Height="50" Margin="0,0,0,0">
+                <StackPanel Height="50" Margin="0,0,0,0" Name="splDonCommands">
                     <Canvas Height="50" Margin="0,0,272.6,0">
                         <Button Height="40" Width="40" Canvas.Left="0" Canvas.Top="2" Click="btnAddDonation_Click" ToolTip="Create new donation">
                             <Button.Background>
@@ -110,32 +110,32 @@
                         <Label Content="Address :"  HorizontalAlignment="Left" Margin="10,6,0,0" Grid.Row="10" VerticalAlignment="Top" Height="26" Width="58"/>
                         <Label Content="Place :" HorizontalAlignment="Left" Margin="10,2,0,0" Grid.Row="6" VerticalAlignment="Top" Height="26" Width="58"/>
                         <TextBox Grid.Column="1" HorizontalAlignment="Left" Name="txtSLNo" Height="26" Margin="15.4,2,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="327"/>
-                        <TextBox Grid.Column="1" HorizontalAlignment="Left" Name="txtName" Height="26" Margin="15.4,2,0,0" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="327"/>
-                        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="26" Name="txtEmail" LostFocus="txtEmail_LostFocus"  Margin="15.4,2,0,0" Grid.Row="4" TextWrapping="Wrap" VerticalAlignment="Top" Width="327"/>
-                        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="15.4,2,0,0"  Name="txtPlace" Grid.Row="6" TextWrapping="Wrap" VerticalAlignment="Top" Width="327"/>
-                        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="73" Margin="15.4,2,0,0" VerticalScrollBarVisibility="Auto"  Name="txtAddress" AcceptsReturn="True" Grid.Row="10" TextWrapping="Wrap" VerticalAlignment="Top" Width="327" />
+                        <TextBox Grid.Column="1" HorizontalAlignment="Left" Name="txtName" TabIndex="2" Height="26" Margin="15.4,2,0,0" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="327"/>
+                        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="26" Name="txtEmail" TabIndex="5" LostFocus="txtEmail_LostFocus"  Margin="15.4,2,0,0" Grid.Row="4" TextWrapping="Wrap" VerticalAlignment="Top" Width="327"/>
+                        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="15.4,2,0,0"  Name="txtPlace" TabIndex="7" Grid.Row="6" TextWrapping="Wrap" VerticalAlignment="Top" Width="327"/>
+                        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="73" Margin="15.4,2,0,0" VerticalScrollBarVisibility="Auto" TabIndex="12"  Name="txtAddress" AcceptsReturn="True" Grid.Row="10" TextWrapping="Wrap" VerticalAlignment="Top" Width="327" />
                         <Label Content="Date :" HorizontalAlignment="Left" Margin="10,0.6,0,0" Grid.Row="1" VerticalAlignment="Top" Height="26" Width="40"/>
-                        <DatePicker Grid.Column="1" HorizontalAlignment="Left" Name="TxtDate" Margin="15.4,1.6,0,0" Grid.Row="1" VerticalAlignment="Top" Width="327" Height="26"/>
+                        <DatePicker Grid.Column="1" HorizontalAlignment="Left" Name="TxtDate" TabIndex="1" Margin="15.4,1.6,0,0" Grid.Row="1" VerticalAlignment="Top" Width="327" Height="26"/>
                         <Label Content="Fund Type:" HorizontalAlignment="Left" Margin="10,2.4,0,0" Grid.Row="7" VerticalAlignment="Top" Height="26" Width="88"/>
-                        <ComboBox Grid.Column="1" HorizontalAlignment="Left" Margin="15.4,2,0,0" Grid.Row="7" SelectedValuePath="Content"   Name="cbFundType" VerticalAlignment="Top" Width="327" Height="26">
+                        <ComboBox Grid.Column="1" HorizontalAlignment="Left" TabIndex="8" Margin="15.4,2,0,0" Grid.Row="7" SelectedValuePath="Content"   Name="cbFundType" VerticalAlignment="Top" Width="327" Height="26">
 
                         </ComboBox>
                         <Label Content="Gender:" HorizontalAlignment="Left" Margin="10,0.6,0,0" Grid.Row="3" VerticalAlignment="Top" Height="26" Width="51"/>
-                        <RadioButton Content="Male" Grid.Column="1" Name="rbMale" HorizontalAlignment="Left" GroupName="test" Margin="19.4,3.6,0,0" Grid.Row="3" VerticalAlignment="Top" Height="16" Width="43"/>
-                        <RadioButton Content="Female" Grid.Column="1" HorizontalAlignment="Left" GroupName="test" Name="rbfeMale" Margin="69.4,3.6,0,0" Grid.Row="3" VerticalAlignment="Top" RenderTransformOrigin="2.238,0.549" Height="16" Width="53"/>
+                        <RadioButton Content="Male" Grid.Column="1" TabIndex="3" Name="rbMale" HorizontalAlignment="Left" GroupName="test" Margin="19.4,3.6,0,0" Grid.Row="3" VerticalAlignment="Top" Height="16" Width="43"/>
+                        <RadioButton Content="Female" Grid.Column="1" TabIndex="4" HorizontalAlignment="Left" GroupName="test" Name="rbfeMale" Margin="69.4,3.6,0,0" Grid.Row="3" VerticalAlignment="Top" RenderTransformOrigin="2.238,0.549" Height="16" Width="53"/>
                         <Label Content="Amount:"  HorizontalAlignment="Left" Margin="10,2,0,0" Grid.Row="8" VerticalAlignment="Top" Height="26" Width="56"/>
-                        <TextBox Grid.Column="1" PreviewTextInput="NumberValidationTextBox" HorizontalAlignment="Left" TextAlignment="Right"  Name="txtAmount" Height="26" Margin="15.4,2,0,0" Grid.Row="8" TextWrapping="Wrap" VerticalAlignment="Top" Width="159"/>
-                        <ComboBox Grid.Column="1" HorizontalAlignment="Left"  Name="cbByType" SelectionChanged="cbByType_SelectionChanged"  SelectedValuePath="Content" Margin="179.4,2,0,0" Grid.Row="8" VerticalAlignment="Top" Width="163" Height="26">
+                        <TextBox Grid.Column="1" PreviewTextInput="NumberValidationTextBox" HorizontalAlignment="Left" TextAlignment="Right" TabIndex="9"  Name="txtAmount" Height="26" Margin="15.4,2,0,0" Grid.Row="8" TextWrapping="Wrap" VerticalAlignment="Top" Width="159"/>
+                        <ComboBox Grid.Column="1" HorizontalAlignment="Left"  Name="cbByType" TabIndex="10" SelectionChanged="cbByType_SelectionChanged"  SelectedValuePath="Content" Margin="179.4,2,0,0" Grid.Row="8" VerticalAlignment="Top" Width="163" Height="26">
 
                         </ComboBox>
                         <Label Content="NO #" IsEnabled="True" Name="lblNo" HorizontalAlignment="Left" Margin="10,2.4,0,0" Grid.Row="9" VerticalAlignment="Top" Height="24" Width="38"/>
-                        <TextBox Grid.Column="1" IsEnabled="True" HorizontalAlignment="Left" Height="26"  Name="txtBNo" Margin="15.4,2.4,0,0" Grid.Row="9" TextWrapping="Wrap" VerticalAlignment="Top" Width="327"/>
-                        <Button Content="Save" Grid.Column="1" Name="btnSaveDonation" HorizontalAlignment="Left" Margin="169.4,3,0,1" Grid.Row="12" VerticalAlignment="Top" Width="75" Height="24" Click="btnSaveDonation_Click"/>
-                        <Button Content="Close"  Name="btnCancel" Click="btnCancel_Click"  Grid.Column="1" HorizontalAlignment="Left" Margin="250.4,3,0,1" Grid.Row="12" VerticalAlignment="Top" Width="75" Height="24"/>
+                        <TextBox Grid.Column="1" IsEnabled="True" HorizontalAlignment="Left" Height="26" TabIndex="11" Name="txtBNo" Margin="15.4,2.4,0,0" Grid.Row="9" TextWrapping="Wrap" VerticalAlignment="Top" Width="327"/>
+                        <Button Content="Save" TabIndex="14" Grid.Column="1" Name="btnSaveDonation" HorizontalAlignment="Left" Margin="169.4,3,0,1" Grid.Row="12" VerticalAlignment="Top" Width="75" Height="24" Click="btnSaveDonation_Click"/>
+                        <Button Content="Close"  TabIndex="15" Name="btnCancel" Click="btnCancel_Click"  Grid.Column="1" HorizontalAlignment="Left" Margin="250.4,3,0,1" Grid.Row="12" VerticalAlignment="Top" Width="75" Height="24"/>
                         <Label Content="Phone No:" HorizontalAlignment="Left"  Margin="10,2.4,0,0" Grid.Row="5" VerticalAlignment="Top" Height="25" Width="66"/>
-                        <TextBox Grid.Column="1" HorizontalAlignment="Left" Text="+91" Height="26"  Name="txtPhone" Margin="15.4,2.4,0,0" Grid.Row="5" TextWrapping="Wrap" VerticalAlignment="Top" Width="327"/>
+                        <TextBox Grid.Column="1" HorizontalAlignment="Left" Text="+91" Height="26" TabIndex="6"  Name="txtPhone" Margin="15.4,2.4,0,0" Grid.Row="5" TextWrapping="Wrap" VerticalAlignment="Top" Width="327"/>
                         <Label Content="Comments:"  HorizontalAlignment="Left" Margin="10,1.8,0,0" Grid.Row="11" VerticalAlignment="Top" Height="26" Width="70"/>
-                        <TextBox Grid.Column="1" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" Height="57" Margin="15.4,2,0,0" Grid.Row="11"  Name="txtComment" TextWrapping="Wrap" VerticalAlignment="Top" Width="327"/>
+                        <TextBox Grid.Column="1" TabIndex="13" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" Height="57" Margin="15.4,2,0,0" Grid.Row="11"  Name="txtComment" TextWrapping="Wrap" VerticalAlignment="Top" Width="327"/>
                     </Grid>
                 </StackPanel>
                 <StackPanel  Margin="0,0,0,0" Name="splDonations" Visibility="Visible" Height="610">
@@ -178,7 +178,7 @@
                     <DataGrid Margin="0,60,4.6,2" SelectionMode="Single" Name="grdExpenses" CanUserAddRows="false" ColumnHeaderHeight="28" RowHeight="28" RowStyle="{StaticResource rowStyle}" CellStyle="{StaticResource cellStyle}"  AutoGenerateColumns="False" AlternatingRowBackground="AliceBlue" BorderThickness="0">
                         <DataGrid.Columns>
 
-                            <DataGridTextColumn Header="Expense No" Binding="{Binding ID}" />
+                            <DataGridTextColumn Header="Expense No" Binding="{Binding ExpenseNo}" />
                             <DataGridTextColumn Header="Date" Binding="{Binding ExpDate}"   />
                             <DataGridTextColumn Header="Name" Binding="{Binding VendorName}" />
                             <DataGridTextColumn Header="Reason" Binding="{Binding Reason}" />
@@ -326,7 +326,7 @@
             <Button Content="Misc" x:Name="btnMisc"  HorizontalAlignment="Left" Height="31" Margin="8,163,0,0" VerticalAlignment="Top" Width="132" RenderTransformOrigin="0.448,4.171" Click="btnMisc_Click" />
             <Button Content="Logout" x:Name="btnLogout"  HorizontalAlignment="Left" Height="31" Margin="8,198,0,0" VerticalAlignment="Top" Width="132" RenderTransformOrigin="0.448,4.171" Click="btnLogout_Click"/>
             <Grid  Name="Misc"  Visibility="collapsed" Grid.ColumnSpan="2" Margin="162,0,5,2">
-                <DataGrid x:Name="grdFundtype" Margin="0,50,0,0" AutoGenerateColumns="False">
+                <DataGrid x:Name="grdFundtype" CanUserAddRows="false" SelectionMode="Single" RowStyle="{StaticResource rowStyle}" CellStyle="{StaticResource cellStyle}"  Margin="0,50,20,0" AutoGenerateColumns="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="FundType" Binding="{Binding FundType}" />
                         <DataGridTextColumn Header="Acc No" Binding="{Binding AccountNo}" />

@@ -18,17 +18,17 @@ namespace DonationManagement
             string qry = "select * from Sequence where TabName='"+ tabName + "' LIMIT 1";
             DataTable Seq = db.GetDataTable(qry);
             DateTime dt = DateTime.Now;
-            string todayseq = dt.Year.ToString() + dt.Month.ToString() + dt.Day.ToString();
+            string todayseq = dt.Year.ToString().Substring(2,2) + dt.Month.ToString().PadLeft(2,'0') + dt.Day.ToString().PadLeft(2, '0');
             if (Convert.ToString(Seq.Rows[0].Field<Int32>("Sequence")) == todayseq)
             {
                 string s = Seq.Rows[0].Field<Int32>("NextNumber").ToString();
-                nextnumber = todayseq + s.PadLeft(5, '0');
+                nextnumber = todayseq + s.PadLeft(3, '0');
                 UpdateSeqWithNextNumber(s, todayseq);
             }
             else
             {
                 string s = "1";
-                nextnumber = todayseq + s.PadLeft(5, '0');
+                nextnumber = todayseq + s.PadLeft(3, '0');
                 UpdateSeqWithNextNumber(s, todayseq);
             }
             return nextnumber;

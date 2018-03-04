@@ -31,6 +31,7 @@ namespace DonationManagement
             LoadComboboxes();
             Expense exp = new Expense();
             txtExpNo.Text= NextExpNumber == "" ? utility.GenerateSeq("Expense") : NextExpNumber;
+           dpExpDate.Text = DateTime.Now.ToShortDateString();
         }
 
         public Expenses(Expense exp)

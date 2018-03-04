@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SQLite;
 using System.IO;
@@ -14,7 +15,6 @@ using System.Windows.Controls;
 using System.Windows.Controls.DataVisualization.Charting;
 using System.Windows.Data;
 using System.Windows.Documents;
-
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -35,7 +35,7 @@ namespace DonationManagement
         bool IsExpEdit = false;
         Utility utility = new Utility();
         string NextNumber = "";
-
+        string dateFormat = string.Empty;
         bool pageLoaded;
 
         public MainWindow()
@@ -44,6 +44,8 @@ namespace DonationManagement
             InitializeData();
             txtSLNo.IsReadOnly = true;
             pageLoaded = true;
+            AppSettingsReader rdr = new AppSettingsReader();
+            dateFormat = rdr.GetValue("DateFormat", typeof(string)).ToString();
         }
 
         private void InitializeData()
@@ -74,10 +76,10 @@ namespace DonationManagement
 
         private void LoadData()
         {
+            splDonCommands.Visibility = Visibility.Visible;
             SQLiteDatabase db = new SQLiteDatabase();
             string expenseQuery = "Select * from Donations ORDER BY Created DESC LIMIT 10";
             // DataTable dtd = db.GetDataTable(expenseQuery);
-
             List<Donation> lidon = db.GetDataList<Donation>(expenseQuery); //dtd.DataTableToList<Donation>();
             grdDonations.ItemsSource = lidon;
         }
@@ -123,6 +125,7 @@ namespace DonationManagement
         {
             splAddDonation.Visibility = Visibility.Visible;
             splDonations.Visibility = Visibility.Collapsed;
+            splDonCommands.Visibility = Visibility.Collapsed;
             DateTime dt = DateTime.Now;
             NextNumber = NextNumber == "" ? utility.GenerateSeq("Donations") : NextNumber;//dt.Year + "" + dt.Month + "" + dt.Day + "" + dt.Hour + "" + dt.Minute + "" + dt.Millisecond.ToString().Substring(0, 2);
             txtSLNo.Text = NextNumber;
@@ -275,6 +278,7 @@ namespace DonationManagement
             splDonations.Visibility = Visibility.Visible;
             stkAddDonations.Visibility = Visibility.Visible;
             splAddDonation.Visibility = Visibility.Collapsed;
+            splDonCommands.Visibility = Visibility.Visible;
         }
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)
@@ -322,6 +326,7 @@ namespace DonationManagement
                 SelectedItem = dobj;
                 FillDoantionForm(SelectedItem);
             }
+            splDonCommands.Visibility = Visibility.Collapsed;
         }
 
         void FillDoantionForm(Donation dobj)
@@ -495,7 +500,7 @@ namespace DonationManagement
             SelectedItem = grdDonations.SelectedItem as Donation;
             if (SelectedItem != null)
             {
-                html = html.Replace("@ReceiptNo@", Convert.ToString(SelectedItem.ReceiptNo)).Replace("@date@", SelectedItem.Ddate.Substring(0, 11)).Replace("@Name@", SelectedItem.Name)
+                html = html.Replace("@ReceiptNo@", Convert.ToString(SelectedItem.ReceiptNo)).Replace("@date@", SelectedItem.Ddate.Substring(0, 9)).Replace("@Name@", SelectedItem.Name)
                     .Replace("@AmountWords@", NumberToWords((int)SelectedItem.Amount) + " only").Replace("@DD@", SelectedItem.BTNo).Replace("@Amount@", Convert.ToString(SelectedItem.Amount) + "/-");
                 wb.NavigateToString(html);
                 sr.Close();
@@ -649,15 +654,13 @@ namespace DonationManagement
         {
             try
             {
-
-
                 if (dpRDFrom.Text == "" || dpRDTo.Text == "")
                 {
                     MessageBox.Show("Please select date");
                     return;
                 }
-                string dtfrom = Convert.ToDateTime(dpRDFrom.Text).ToString("MM/dd/yyyy");
-                string dtto = Convert.ToDateTime(dpRDTo.Text).ToString("MM/dd/yyyy");
+                string dtfrom = Convert.ToDateTime(dpRDFrom.Text).ToString(dateFormat);
+                string dtto = Convert.ToDateTime(dpRDTo.Text).ToString(dateFormat);
 
                 db = new SQLiteDatabase();
                 string expenseQuery = "Select * from Donations where Created BETWEEN '" + dtfrom + " 00:00:00 AM' AND '" + dtto + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtRDName.Text) ? "" : "AND Name Like '%" + txtRDName.Text + "%'") + " ORDER BY Created DESC";
@@ -681,7 +684,7 @@ namespace DonationManagement
             catch (Exception ex)
             {
 
-               
+
             }
         }
 
@@ -694,8 +697,8 @@ namespace DonationManagement
                     MessageBox.Show("Please select date");
                     return;
                 }
-                string dtfrom = Convert.ToDateTime(dpREFrom.Text).ToString("MM/dd/yyyy");
-                string dtto = Convert.ToDateTime(dpRETo.Text).ToString("MM/dd/yyyy");
+                string dtfrom = Convert.ToDateTime(dpREFrom.Text).ToString(dateFormat);
+                string dtto = Convert.ToDateTime(dpRETo.Text).ToString(dateFormat);
                 db = new SQLiteDatabase();
                 string expenseQuery = "Select * from EXPENSES where Created BETWEEN '" + dtfrom + " 00:00:00 AM' AND '" + dtto + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtREName.Text) ? "" : "AND Name Like '%" + txtREName.Text + "%'") + " ORDER BY Created DESC";
                 DataTable dtd = db.GetDataTable(expenseQuery);
@@ -742,8 +745,8 @@ namespace DonationManagement
                 return;
             }
             gdChart.Children.Clear();
-            string dtfrom = Convert.ToDateTime(dpRCFrom.Text).ToString("MM/dd/yyyy");
-            string dtto = Convert.ToDateTime(dpRCTo.Text).ToString("MM/dd/yyyy");
+            string dtfrom = Convert.ToDateTime(dpRCFrom.Text).ToString(dateFormat);
+            string dtto = Convert.ToDateTime(dpRCTo.Text).ToString(dateFormat);
             db = new SQLiteDatabase();
             string Query = "Select ID, Edate as Date, Amount from EXPENSES where Created BETWEEN '" + dtfrom + " 00:00:00 AM' AND '" + dtto + " 11:59:00 PM' ORDER BY Created DESC LIMIT 100";
             DataTable dtd = db.GetDataTable(Query);
@@ -901,7 +904,7 @@ namespace DonationManagement
             if (grdExpenses.SelectedItem != null)
             {
                 SelectedExpenseItem = grdExpenses.SelectedItem as Expense;
-                MessageBoxResult dialogResult = MessageBox.Show("Are you sure you want to delete the Expense +", "Delete Expense", MessageBoxButton.YesNo);
+                MessageBoxResult dialogResult = MessageBox.Show("Are you sure you want to delete the Expense?", "Delete Expense", MessageBoxButton.YesNo);
 
                 if (dialogResult == MessageBoxResult.Yes)
                 {
@@ -1034,6 +1037,10 @@ namespace DonationManagement
                 fuc.SaveButtonClick += Fuc_SaveButtonClick;
                 fuc.CancelButtonClick += Fuc_CancelButtonClick;
             }
+            else
+            {
+                MessageBox.Show("Please select Fund type to Edit");
+            }
         }
 
         private void Fuc_CancelButtonClick(object sender, EventArgs e)
@@ -1051,7 +1058,7 @@ namespace DonationManagement
             FundTypes ft = grdFundtype.SelectedItem as FundTypes;
             if (ft != null)
             {
-                MessageBoxResult dialogResult = MessageBox.Show("Are you sure you want to delete the Fund Type +", "Delete Fund Type", MessageBoxButton.YesNo);
+                MessageBoxResult dialogResult = MessageBox.Show("Are you sure you want to delete the Fund Type?", "Delete Fund Type", MessageBoxButton.YesNo);
                 if (dialogResult == MessageBoxResult.Yes)
                 {
 
@@ -1063,6 +1070,10 @@ namespace DonationManagement
 
                     btnMisc_Click(null, null);
                 }
+            }
+            else
+            {
+                MessageBox.Show("Please select Fund type to delete");
             }
         }
     }
