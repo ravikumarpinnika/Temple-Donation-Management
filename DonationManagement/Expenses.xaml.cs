@@ -66,11 +66,12 @@ namespace DonationManagement
             Expense eobj = exp;
             eobj.FundType =Convert.ToString(cbExpFundType.SelectedValue);
             eobj.TxnType= Convert.ToString(cbTxnType.SelectedValue);
+            eobj.ExpDate = Convert.ToDateTime(eobj.ExpDate).ToSqlLiteDatetime();
             if (IsExpEdit)
             {
-                eobj.Modified = Convert.ToString(DateTime.Now);
+                eobj.Modified = DateTime.Now.ToSqlLiteDatetime();
                 eobj.ModifiedBy = LoginUser.UName;
-                eobj.Created = exp.Created;
+                eobj.Created = Convert.ToDateTime(exp.Created).ToSqlLiteDatetime();
                 eobj.CreatedBy = exp.CreatedBy;
                 Dictionary<string, string> dic1 = Utility.GetTypePropertyValues<Expense>(eobj);
                 string s = db.Update("Expenses", dic1, " ID =" + Convert.ToString(exp.ID) + "");
@@ -78,7 +79,7 @@ namespace DonationManagement
             }
             else
             {
-                eobj.Created = Convert.ToString(DateTime.Now);
+                eobj.Created = DateTime.Now.ToSqlLiteDatetime();
                 eobj.CreatedBy = LoginUser.UName;
                 Dictionary<string, string> dic1 = Utility.GetTypePropertyValues<Expense>(eobj);
                 string s = db.Insert("Expenses", dic1);

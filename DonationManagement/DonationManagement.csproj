@@ -178,6 +178,7 @@
     <Resource Include="Images\ddelete.png" />
     <Content Include="BalanceSheet.html" />
     <Content Include="ExpenseVocher.html" />
+    <Resource Include="Images\Exp.png" />
     <Content Include="PrintTemplate.html" />
   </ItemGroup>
   <ItemGroup>

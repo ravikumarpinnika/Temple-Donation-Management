@@ -44,8 +44,8 @@ C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\bin\Debug\Images
 C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\bin\Debug\DonationManagement.exe.config
 C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\bin\Debug\DonationManagement.exe
 C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\bin\Debug\DonationManagement.pdb
-C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\DonationManagement.csprojResolveAssemblyReference.cache
 C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\Expenses.g.cs
+C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\FundTypesUC.g.cs
 C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\Invoice.g.cs
 C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\MainWindow.g.cs
 C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\App.g.cs
@@ -54,6 +54,7 @@ C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\Genera
 C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\DonationManagement_MarkupCompile.cache
 C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\DonationManagement_MarkupCompile.lref
 C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\Expenses.baml
+C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\FundTypesUC.baml
 C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\Invoice.baml
 C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\MainWindow.baml
 C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\DonationManagement.g.resources
@@ -62,5 +63,3 @@ C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\Donati
 C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\DonationManagement.csproj.CoreCompileInputs.cache
 C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\DonationManagement.exe
 C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\DonationManagement.pdb
-C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\FundTypesUC.g.cs
-C:\Users\Srinivas\Desktop\DonationManagement\DonationManagement\obj\Debug\FundTypesUC.baml

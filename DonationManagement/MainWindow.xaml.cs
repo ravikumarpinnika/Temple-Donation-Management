@@ -54,10 +54,10 @@ namespace DonationManagement
             MainGrid.Visibility = Visibility.Collapsed;
             LoginGrid.Visibility = Visibility.Visible;
             // dpexpDate.Text = DateTime.Now.ToShortDateString();
-            dpRDFrom.Text = DateTime.Now.AddDays(-10).ToShortDateString();
-            dpRDTo.Text = DateTime.Now.AddDays(1).ToShortDateString();
-            dpREFrom.Text = DateTime.Now.AddDays(-10).ToShortDateString();
-            dpRETo.Text = DateTime.Now.AddDays(1).ToShortDateString();
+            dtDonFrom.Text = dpRDFrom.Text = DateTime.Now.AddDays(-10).ToShortDateString();
+            dtDonTo.Text = dpRDTo.Text = DateTime.Now.AddDays(1).ToShortDateString();
+            dtExpFrom.Text = dpREFrom.Text = DateTime.Now.AddDays(-10).ToShortDateString();
+            dtExpTo.Text = dpRETo.Text = DateTime.Now.AddDays(1).ToShortDateString();
             dpRCFrom.Text = DateTime.Now.AddDays(-10).ToShortDateString();
             dpRCTo.Text = DateTime.Now.AddDays(1).ToShortDateString();
 
@@ -76,12 +76,28 @@ namespace DonationManagement
 
         private void LoadData()
         {
-            splDonCommands.Visibility = Visibility.Visible;
-            SQLiteDatabase db = new SQLiteDatabase();
-            string expenseQuery = "Select * from Donations ORDER BY Created DESC LIMIT 10";
-            // DataTable dtd = db.GetDataTable(expenseQuery);
-            List<Donation> lidon = db.GetDataList<Donation>(expenseQuery); //dtd.DataTableToList<Donation>();
-            grdDonations.ItemsSource = lidon;
+            try
+            {
+                LoadSearchDonData(); ;
+                return;
+                if (dtDonFrom.Text == "" || dtDonTo.Text == "")
+                {
+                    return;
+                }
+                string dtfrom = Convert.ToDateTime(dtDonFrom.Text).ToSqlLiteDatetime();
+                string dtto = Convert.ToDateTime(dtDonTo.Text + " 23:59:59").ToSqlLiteDatetime();
+                splDonCommands.Visibility = Visibility.Visible;
+                SQLiteDatabase db = new SQLiteDatabase();
+                // string expenseQuery = "Select * from Donations ORDER BY Created DESC LiMIT 1000";
+                // DataTable dtd = db.GetDataTable(expenseQuery);
+                string expenseQuery = "Select * from Donations where Created BETWEEN '" + dtfrom + "' AND '" + dtto + "' " + (string.IsNullOrEmpty(txtDonSearch.Text) ? "" : "AND Name Like '%" + txtREName.Text + "%'") + " ORDER BY Created DESC Limit 1000";
+                List<Donation> lidon = db.GetDataList<Donation>(expenseQuery); //dtd.DataTableToList<Donation>();
+                grdDonations.ItemsSource = lidon;
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Please enter Valid Values", "Error");
+            }
         }
 
 
@@ -185,9 +201,9 @@ namespace DonationManagement
             dobj.Place = txtPlace.Text;
             if (IsDonationEdit)
             {
-                dobj.Modified = Convert.ToString(DateTime.Now);
+                dobj.Modified = DateTime.Now.ToSqlLiteDatetime();
                 dobj.ModifiedBy = LoginUser.UName;
-                dobj.Created = SelectedItem.Created;
+                dobj.Created = Convert.ToDateTime(SelectedItem.Created).ToSqlLiteDatetime();
                 dobj.CreatedBy = SelectedItem.CreatedBy;
                 Dictionary<string, string> dic1 = GetTypePropertyValues<Donation>(dobj);
                 string s = db.Update("Donations", dic1, " ReceiptNo =" + Convert.ToString(dobj.ReceiptNo) + "");
@@ -196,7 +212,7 @@ namespace DonationManagement
             }
             else
             {
-                dobj.Created = Convert.ToString(DateTime.Now);
+                dobj.Created = DateTime.Now.ToSqlLiteDatetime();
                 dobj.CreatedBy = LoginUser.UName;
                 Dictionary<string, string> dic1 = GetTypePropertyValues<Donation>(dobj);
                 string s = db.Insert("Donations", dic1);
@@ -298,6 +314,8 @@ namespace DonationManagement
                 btnSqlSettings.IsEnabled = (LoginUser.Role == "Admin" ? true : false);
                 txtPassword.Password = "";
                 InitializeConsts();
+                var Logindet = @"INSERT INTO LoginActivity (LoginName,LoginDate)VALUES ('"+ LoginUser.UName + "', datetime('now'));";
+                db.ExecuteNonQuery(Logindet);
             }
             else
             {
@@ -367,15 +385,7 @@ namespace DonationManagement
             LoadExpenses();
         }
 
-        private void LoadExpenses()
-        {
-            SQLiteDatabase db = new SQLiteDatabase();
-            string expenseQuery = "Select * from Expenses ORDER BY Created DESC";
-            DataTable dtd = db.GetDataTable(expenseQuery);
-            List<Expense> liexp = dtd.DataTableToList<Expense>();
-            //  if (liexp.Count > 0)
-            grdExpenses.ItemsSource = liexp;
-        }
+
 
         private void btnReports_Click(object sender, RoutedEventArgs e)
         {
@@ -490,65 +500,80 @@ namespace DonationManagement
         WebBrowser wb;
         private void btnPrint_Click(object sender, RoutedEventArgs e)
         {
-            wb = new WebBrowser();
-            string excdir = Directory.GetCurrentDirectory() + @"\Templates";
-            string tpath = excdir + @"\PrintTemplate.html";
-            string imgPath = excdir + @"\Receipt.png";
-            SelectedItem = grdDonations.SelectedItem as Donation;
-            if (SelectedItem != null)
+            try
             {
-                if (SelectedItem.Amount <= 1000)
+                wb = new WebBrowser();
+                string excdir = Directory.GetCurrentDirectory() + @"\Templates";
+                string tpath = excdir + @"\PrintTemplate.html";
+                string imgPath = excdir + @"\Receipt.png";
+                SelectedItem = grdDonations.SelectedItem as Donation;
+                if (SelectedItem != null)
                 {
-                    tpath = excdir + @"\smallVocher.html";
-                    imgPath = excdir + @"\smallVocher.png";
+                    if (SelectedItem.Amount <= 1000)
+                    {
+                        tpath = excdir + @"\smallVocher.html";
+                        imgPath = excdir + @"\smallVocher.png";
+                    }
+
+                    StreamReader sr = new StreamReader(tpath);
+                    string html = sr.ReadToEnd();
+                    html = html.Replace("@img@", imgPath);
+
+                    html = html.Replace("@ReceiptNo@", Convert.ToString(SelectedItem.ReceiptNo)).Replace("@date@", SelectedItem.Ddate.Substring(0, 8)).Replace("@Name@", SelectedItem.Name)
+                        .Replace("@AmountWords@", NumberToWords((int)SelectedItem.Amount) + " only").Replace("@DD@", SelectedItem.BTNo).Replace("@Amount@", Convert.ToString(SelectedItem.Amount) + "/-");
+                    wb.NavigateToString(html);
+                    sr.Close();
+                    wb.Navigated += Wb_Navigated;
                 }
-
-                StreamReader sr = new StreamReader(tpath);
-                string html = sr.ReadToEnd();
-                html = html.Replace("@img@", imgPath);
-
-                html = html.Replace("@ReceiptNo@", Convert.ToString(SelectedItem.ReceiptNo)).Replace("@date@", SelectedItem.Ddate.Substring(0, 8)).Replace("@Name@", SelectedItem.Name)
-                    .Replace("@AmountWords@", NumberToWords((int)SelectedItem.Amount) + " only").Replace("@DD@", SelectedItem.BTNo).Replace("@Amount@", Convert.ToString(SelectedItem.Amount) + "/-");
-                wb.NavigateToString(html);
-                sr.Close();
-                wb.Navigated += Wb_Navigated;
+                else
+                {
+                    wb = null;
+                    MessageBox.Show("Pleases select item to print", "Print");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                wb = null;
-                MessageBox.Show("Pleases select item to print", "Print");
+
+                MessageBox.Show("Error Happened :" + ex.Message, "Print");
             }
         }
 
         private void btnPrintExp_Click(object sender, RoutedEventArgs e)
         {
-            wb = new WebBrowser();
-            string excdir = Directory.GetCurrentDirectory() + @"\Templates";
-            string tpath = excdir + @"\VocherTemplate.html";
-            string imgPath = excdir + @"\Vocher.png";
-            StreamReader sr = new StreamReader(tpath);
-            string html = sr.ReadToEnd();
-            html = html.Replace("@img@", imgPath);
-            Expense exp = grdExpenses.SelectedItem as Expense;
-            SQLiteDatabase db = new SQLiteDatabase();
-            string expenseQuery = "Select * from EXPENSES e inner join FundType f on e.FundType=f.Fundtype where e.ID=" + exp.ID;
-            DataTable dtd = db.GetDataTable(expenseQuery);
-            if (exp != null)
+            try
             {
-                html = html.Replace("@ReceiptNo@", Convert.ToString(exp.ExpenseNo)).Replace("@date@", exp.ExpDate.Substring(0, 9)).Replace("@Name@", exp.Reason)
-                    .Replace("@AmountWords@", NumberToWords((int)exp.AmountPaid) + " only").Replace("@DD@", exp.TxnRefNo).Replace("@Amount@", Convert.ToString(exp.AmountPaid) + "/-");
-                html = html.Replace("@FUNDTYPE@", GetField(dtd.Rows[0], "FundType"));
-                html = html.Replace("@Bank@", GetField(dtd.Rows[0], "BankName"));
-                html = html.Replace("@Dated@", exp.ExpDate.Substring(0, 10));
-                html = html.Replace("@Debit@", GetField(dtd.Rows[0], "AccountNo"));
-                wb.NavigateToString(html);
-                sr.Close();
-                wb.Navigated += Wb_Navigated;
+                wb = new WebBrowser();
+                string excdir = Directory.GetCurrentDirectory() + @"\Templates";
+                string tpath = excdir + @"\VocherTemplate.html";
+                string imgPath = excdir + @"\Vocher.png";
+                StreamReader sr = new StreamReader(tpath);
+                string html = sr.ReadToEnd();
+                html = html.Replace("@img@", imgPath);
+                Expense exp = grdExpenses.SelectedItem as Expense;
+                SQLiteDatabase db = new SQLiteDatabase();
+                string expenseQuery = "Select * from EXPENSES e inner join FundType f on e.FundType=f.Fundtype where e.ID=" + exp.ID;
+                DataTable dtd = db.GetDataTable(expenseQuery);
+                if (exp != null)
+                {
+                    html = html.Replace("@ReceiptNo@", Convert.ToString(exp.ExpenseNo)).Replace("@date@", exp.ExpDate.Substring(0, 9)).Replace("@Name@", exp.Reason)
+                        .Replace("@AmountWords@", NumberToWords((int)exp.AmountPaid) + " only").Replace("@DD@", exp.TxnRefNo).Replace("@Amount@", Convert.ToString(exp.AmountPaid) + "/-");
+                    html = html.Replace("@FUNDTYPE@", GetField(dtd.Rows[0], "FundType"));
+                    html = html.Replace("@Bank@", GetField(dtd.Rows[0], "BankName"));
+                    html = html.Replace("@Dated@", exp.ExpDate.Substring(0, 10));
+                    html = html.Replace("@Debit@", GetField(dtd.Rows[0], "AccountNo"));
+                    wb.NavigateToString(html);
+                    sr.Close();
+                    wb.Navigated += Wb_Navigated;
+                }
+                else
+                {
+                    wb = null;
+                    MessageBox.Show("Pleases select item to print", "Print");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                wb = null;
-                MessageBox.Show("Pleases select item to print", "Print");
+                MessageBox.Show("Error Happened :" + ex.Message, "Print");
             }
         }
 
@@ -666,16 +691,16 @@ namespace DonationManagement
                     MessageBox.Show("Please select date");
                     return;
                 }
-                string dtfrom = Convert.ToDateTime(dpRDFrom.Text).ToString(dateFormat);
-                string dtto = Convert.ToDateTime(dpRDTo.Text).ToString(dateFormat);
+                string dtfrom = Convert.ToDateTime(dpRDFrom.Text).ToSqlLiteDatetime();//.ToString(dateFormat);
+                string dtto = Convert.ToDateTime(dpRDTo.Text + " 23:59:00").ToSqlLiteDatetime();//.ToString(dateFormat);
 
                 db = new SQLiteDatabase();
-                string expenseQuery = "Select * from Donations where Created BETWEEN '" + dtfrom + " 00:00:00 AM' AND '" + dtto + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtRDName.Text) ? "" : "AND Name Like '%" + txtRDName.Text + "%'") + " ORDER BY Created DESC";
+                string expenseQuery = "Select * from Donations where Created BETWEEN '" + dtfrom + "' AND '" + dtto + "' " + (string.IsNullOrEmpty(txtRDName.Text) ? "" : "AND Name Like '%" + txtRDName.Text + "%'") + " ORDER BY Created DESC";
                 // DataTable dtd = db.GetDataTable(expenseQuery);
                 List<Donation> lidon = db.GetDataList<Donation>(expenseQuery); //dtd.DataTableToList<Donation>();
                 grdRepDonations.ItemsSource = lidon;
 
-                string countqry = "Select Count(*) as Count,SUM(Amount) as Total from Donations where Created BETWEEN '" + dtfrom + " 00:00:00 AM' AND '" + dtto + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtRDName.Text) ? "" : "AND Name Like '%" + txtRDName.Text + "%'");
+                string countqry = "Select Count(*) as Count,SUM(Amount) as Total from Donations where Created BETWEEN '" + dtfrom + "' AND '" + dtto + "' " + (string.IsNullOrEmpty(txtRDName.Text) ? "" : "AND Name Like '%" + txtRDName.Text + "%'");
                 DataTable ctd = db.GetDataTable(countqry);
                 if (ctd.Rows.Count > 0)
                 {
@@ -704,15 +729,15 @@ namespace DonationManagement
                     MessageBox.Show("Please select date");
                     return;
                 }
-                string dtfrom = Convert.ToDateTime(dpREFrom.Text).ToString(dateFormat);
-                string dtto = Convert.ToDateTime(dpRETo.Text).ToString(dateFormat);
+                string dtfrom = Convert.ToDateTime(dpREFrom.Text).ToSqlLiteDatetime();
+                string dtto = Convert.ToDateTime(dpRETo.Text + " 23:59:59").ToSqlLiteDatetime();
                 db = new SQLiteDatabase();
-                string expenseQuery = "Select * from EXPENSES where Created BETWEEN '" + dtfrom + " 00:00:00 AM' AND '" + dtto + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtREName.Text) ? "" : "AND Name Like '%" + txtREName.Text + "%'") + " ORDER BY Created DESC";
+                string expenseQuery = "Select * from EXPENSES where Created BETWEEN '" + dtfrom + "' AND '" + dtto + "' " + (string.IsNullOrEmpty(txtREName.Text) ? "" : "AND Name Like '%" + txtREName.Text + "%'") + " ORDER BY Created DESC";
                 DataTable dtd = db.GetDataTable(expenseQuery);
                 List<Expense> lidon = dtd.DataTableToList<Expense>();
                 grdRepExpenses.ItemsSource = lidon;
 
-                string countqry = "Select Count(*) as Count,SUM(Amount) as Total from EXPENSES where Created BETWEEN '" + dtfrom + " 00:00:00 AM' AND '" + dtto + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtREName.Text) ? "" : "AND Name Like '%" + txtREName.Text + "%'");
+                string countqry = "Select Count(*) as Count,SUM(Amount) as Total from EXPENSES where Created BETWEEN '" + dtfrom + "' AND '" + dtto + "' " + (string.IsNullOrEmpty(txtREName.Text) ? "" : "AND Name Like '%" + txtREName.Text + "%'");
                 DataTable ctd = db.GetDataTable(countqry);
                 if (ctd.Rows.Count > 0)
                 {
@@ -752,25 +777,25 @@ namespace DonationManagement
                 return;
             }
             gdChart.Children.Clear();
-            string dtfrom = Convert.ToDateTime(dpRCFrom.Text).ToString(dateFormat);
-            string dtto = Convert.ToDateTime(dpRCTo.Text).ToString(dateFormat);
+            string dtfrom = Convert.ToDateTime(dpRCFrom.Text).ToSqlLiteDatetime();
+            string dtto = Convert.ToDateTime(dpRCTo.Text + " 23:59:59").ToSqlLiteDatetime();
             db = new SQLiteDatabase();
-            string Query = "Select ID, Edate as Date, Amount from EXPENSES where Created BETWEEN '" + dtfrom + " 00:00:00 AM' AND '" + dtto + " 11:59:00 PM' ORDER BY Created DESC LIMIT 100";
+            string Query = "Select ID, Edate as Date, Amount from EXPENSES where Created BETWEEN '" + dtfrom + "' AND '" + dtto + "' ORDER BY Created DESC";
             DataTable dtd = db.GetDataTable(Query);
             List<ChartData> liexp = dtd.DataTableToList<ChartData>();
-            Query = "Select ReceiptNo, Ddate as Date, Amount from Donations where Created BETWEEN '" + dtfrom + " 00:00:00 AM' AND '" + dtto + " 11:59:00 PM' ORDER BY Created DESC LIMIT 100";
+            Query = "Select ReceiptNo, Ddate as Date, Amount from Donations where Created BETWEEN '" + dtfrom + "' AND '" + dtto + "' ORDER BY Created DESC";
             DataTable dte = db.GetDataTable(Query);
             List<ChartData> lidon = dtd.DataTableToList<ChartData>();
 
             Chart crt = new Chart();
             crt.Margin = new Thickness(0, 0, 0, 0);
             PieSeries ls = new PieSeries();
-            ls.IndependentValuePath = "Date";
-            ls.DependentValuePath = "Amount";
+            ls.IndependentValuePath = "ExpDate";
+            ls.DependentValuePath = "AmountPaid";
             ls.ItemsSource = liexp;
             crt.Series.Add(ls);
             PieSeries lsd = new PieSeries();
-            lsd.IndependentValuePath = "Date";
+            lsd.IndependentValuePath = "Ddate";
             lsd.DependentValuePath = "Amount";
             lsd.ItemsSource = lidon;
             crt.Series.Add(lsd);
@@ -790,13 +815,15 @@ namespace DonationManagement
 
 
                 List<Donation> lidon = dtd.DataTableToList<Donation>();
+                
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
-                // saveFileDialog.FileName= "Donation" +(new Random(1000)).Next(0, 1000).ToString() + ".csv";
-                //saveFileDialog.Filter ="|*.csv";
+                
+                saveFileDialog.FileName = "Donation_" + (new Random(1000)).Next(0, 1000).ToString() + ".csv";
+                saveFileDialog.Filter = "|*.csv";
                 saveFileDialog.DefaultExt = ".csv";
                 if (saveFileDialog.ShowDialog() == true)
                 {
-                    Utility.CreateCSVFromGenericList<Donation>(lidon, saveFileDialog.FileName);
+                    Utility.CreateCSVFromGenericList<Donation>(lidon,  "c:\\"+saveFileDialog.FileName);
                 }
             }
             catch (Exception ex)
@@ -817,11 +844,11 @@ namespace DonationManagement
                 DataTable dtd = db.GetDataTable(expenseQuery);
                 List<Expense> lidon = dtd.DataTableToList<Expense>();
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
-                // saveFileDialog.FileName = "Expense" + (new Random(1000)).Next(0,1000).ToString() + ".csv";
+                 saveFileDialog.FileName = "Expense" + (new Random(1000)).Next(0,1000).ToString() + ".csv";
                 saveFileDialog.DefaultExt = ".csv";
                 if (saveFileDialog.ShowDialog() == true)
                 {
-                    Utility.CreateCSVFromGenericList<Expense>(lidon, saveFileDialog.FileName);
+                    Utility.CreateCSVFromGenericList<Expense>(lidon, "c:\\"+saveFileDialog.FileName);
                 }
             }
             catch (Exception ex)
@@ -1083,5 +1110,94 @@ namespace DonationManagement
                 MessageBox.Show("Please select Fund type to delete");
             }
         }
+
+        private void btnDonReset_Click(object sender, RoutedEventArgs e)
+        {
+            txtDonSearch.Text = "";
+        }
+
+        private void btnExpReset_Click(object sender, RoutedEventArgs e)
+        {
+            txtExpSearch.Text = "";
+            LoadExpenses();
+        }
+
+        private void txtExpSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            LoadExpenses();
+        }
+
+        private void txtDonSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+            LoadSearchDonData();
+        }
+
+        private void btnDonSearch_Click(object sender, RoutedEventArgs e)
+        {
+            txtDonSearch.Text = "";
+            LoadSearchDonData();
+        }
+
+        private void LoadSearchDonData()
+        {
+            try
+            {
+                if (dtDonFrom.Text == "" || dtDonTo.Text == "")
+                {
+                    return;
+                }
+                string dtfrom = Convert.ToDateTime(dtDonFrom.Text).ToSqlLiteDatetime();
+                string dtto = Convert.ToDateTime(dtDonTo.Text + " 23:59:59").ToSqlLiteDatetime();
+                SQLiteDatabase db = new SQLiteDatabase();
+                string expenseQuery = "Select * from Donations where Created BETWEEN '" + dtfrom + "' AND '" + dtto + "' " + (string.IsNullOrEmpty(txtDonSearch.Text) ? "" : "AND Name Like '%" + txtDonSearch.Text + "%'") + " ORDER BY Created DESC";
+                splDonCommands.Visibility = Visibility.Visible;
+                List<Donation> lidon = db.GetDataList<Donation>(expenseQuery);
+                grdDonations.ItemsSource = lidon;
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Please enter Valid Values", "Error");
+            }
+        }
+        private void LoadExpenses()
+        {
+            try
+            {
+                if (dtExpFrom.Text == "" || dtExpTo.Text == "")
+                {
+                    MessageBox.Show("Please select date");
+                    return;
+                }
+                string dtfrom = Convert.ToDateTime(dtExpFrom.Text).ToSqlLiteDatetime();
+                string dtto = Convert.ToDateTime(dtExpTo.Text + " 23:59:59").ToSqlLiteDatetime();
+                SQLiteDatabase db = new SQLiteDatabase();
+                string expenseQuery = "Select * from EXPENSES where Created BETWEEN '" + dtfrom + "' AND '" + dtto + "' " + (string.IsNullOrEmpty(txtExpSearch.Text) ? "" : "AND Name Like '%" + txtExpSearch.Text + "%'") + " ORDER BY Created DESC";
+                DataTable dtd = db.GetDataTable(expenseQuery);
+                List<Expense> liexp = dtd.DataTableToList<Expense>();
+                grdExpenses.ItemsSource = liexp;
+
+                //    SQLiteDatabase db = new SQLiteDatabase();
+                //string expenseQuery = "Select * from Expenses ORDER BY Created DESC";
+                //DataTable dtd = db.GetDataTable(expenseQuery);
+                //List<Expense> liexp = dtd.DataTableToList<Expense>();
+                //grdExpenses.ItemsSource = liexp;
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Please enter Valid Values", "Error");
+            }
+        }
+
+        private void LoadSearchExpData()
+        {
+
+        }
+
+        private void btnExpSearch_Click(object sender, RoutedEventArgs e)
+        {
+            LoadExpenses();
+        }
+
     }
 }

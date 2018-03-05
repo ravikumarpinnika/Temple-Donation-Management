@@ -58,7 +58,7 @@
             <Rectangle Grid.ColumnSpan="1" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="672" Margin="150,0,0,0" Stroke="Black" VerticalAlignment="Top" Width="3"/>
             <StackPanel Grid.Column="1" Name="stkAddDonations"  Margin="0,10,0,0" VerticalAlignment="Top" Visibility="Collapsed" >
                 <StackPanel Height="50" Margin="0,0,0,0" Name="splDonCommands">
-                    <Canvas Height="50" Margin="0,0,272.6,0">
+                    <Canvas Height="50" Margin="0,0,10,0">
                         <Button Height="40" Width="40" Canvas.Left="0" Canvas.Top="2" Click="btnAddDonation_Click" ToolTip="Create new donation">
                             <Button.Background>
                                 <ImageBrush ImageSource="Images/Donate-50.png"/>
@@ -79,6 +79,14 @@
                                 <ImageBrush ImageSource="Images/print.png"/>
                             </Button.Background>
                         </Button>
+                        <TextBox Height="26" Canvas.Left="666" TextWrapping="Wrap" Name="txtDonSearch" TextChanged="txtDonSearch_TextChanged"  Text="" Canvas.Top="18" Width="196"/>
+                        <Button Content="Reset" Name="btnDonReset" Canvas.Left="937" Height="24" Canvas.Top="20" Width="54" Click="btnDonReset_Click"/>
+                        <Label Content="Created     From :" Canvas.Left="192" Canvas.Top="18" Width="102"/>
+                        <DatePicker Name="dtDonFrom" Canvas.Left="303" Canvas.Top="20" Width="120"/>
+                        <Label Content="To :" Canvas.Left="441" Canvas.Top="20"/>
+                        <DatePicker Name="dtDonTo" Canvas.Left="484" Canvas.Top="20" Width="120"/>
+                        <Button Content="Search" Canvas.Left="871" Name="btnDonSearch" Click="btnDonSearch_Click" Canvas.Top="20" Width="61" Height="24"/>
+                        <Label Content="Name" Canvas.Left="611" Canvas.Top="18" Width="44"/>
                     </Canvas>
 
                 </StackPanel>
@@ -121,8 +129,8 @@
 
                         </ComboBox>
                         <Label Content="Gender:" HorizontalAlignment="Left" Margin="10,0.6,0,0" Grid.Row="3" VerticalAlignment="Top" Height="26" Width="51"/>
-                        <RadioButton Content="Male" Grid.Column="1" TabIndex="3" Name="rbMale" HorizontalAlignment="Left" GroupName="test" Margin="19.4,3.6,0,0" Grid.Row="3" VerticalAlignment="Top" Height="16" Width="43"/>
-                        <RadioButton Content="Female" Grid.Column="1" TabIndex="4" HorizontalAlignment="Left" GroupName="test" Name="rbfeMale" Margin="69.4,3.6,0,0" Grid.Row="3" VerticalAlignment="Top" RenderTransformOrigin="2.238,0.549" Height="16" Width="53"/>
+                        <RadioButton Content="Male" Grid.Column="1" TabIndex="3" Name="rbMale" HorizontalAlignment="Left" GroupName="test" Margin="19.4,3.6,0,0" Grid.Row="3" VerticalAlignment="Top" Height="16" Width="48"/>
+                        <RadioButton Content="Female" Grid.Column="1" TabIndex="4" HorizontalAlignment="Left" GroupName="test" Name="rbfeMale" Margin="69.4,3.6,0,0" Grid.Row="3" VerticalAlignment="Top" RenderTransformOrigin="2.238,0.549" Height="16" Width="58"/>
                         <Label Content="Amount:"  HorizontalAlignment="Left" Margin="10,2,0,0" Grid.Row="8" VerticalAlignment="Top" Height="26" Width="56"/>
                         <TextBox Grid.Column="1" PreviewTextInput="NumberValidationTextBox" HorizontalAlignment="Left" TextAlignment="Right" TabIndex="9"  Name="txtAmount" Height="26" Margin="15.4,2,0,0" Grid.Row="8" TextWrapping="Wrap" VerticalAlignment="Top" Width="159"/>
                         <ComboBox Grid.Column="1" HorizontalAlignment="Left"  Name="cbByType" TabIndex="10" SelectionChanged="cbByType_SelectionChanged"  SelectedValuePath="Content" Margin="179.4,2,0,0" Grid.Row="8" VerticalAlignment="Top" Width="163" Height="26">
@@ -146,7 +154,7 @@
                                 <DataGridTextColumn Header="Date" Binding="{Binding Ddate}"   />
                                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
                                 <DataGridTextColumn Header="Gender" Binding="{Binding Gender}" />
-                                <DataGridTextColumn Header="Place" Binding="{Binding Place}" />
+                                <DataGridTextColumn Header="Fund Type" Binding="{Binding FundType}" />
                                 <DataGridTextColumn Header="Phone" Binding="{Binding Phone}" />
                                 <DataGridTextColumn Header="Created" Binding="{Binding Created}" />
                                 <DataGridTextColumn Header="Created By" Binding="{Binding CreatedBy}" />
@@ -180,6 +188,7 @@
 
                             <DataGridTextColumn Header="Expense No" Binding="{Binding ExpenseNo}" />
                             <DataGridTextColumn Header="Date" Binding="{Binding ExpDate}"   />
+                            <DataGridTextColumn Header="Name" Binding="{Binding FundType}" />
                             <DataGridTextColumn Header="Name" Binding="{Binding VendorName}" />
                             <DataGridTextColumn Header="Reason" Binding="{Binding Reason}" />
                             <DataGridTextColumn Header="Amount" Binding="{Binding AmountPaid}" />
@@ -199,27 +208,35 @@
                             </DataGridTemplateColumn>-->
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Canvas Margin="18,10,474.6,614" >
-                        <Button Height="40" Width="40" Canvas.Left="0" Canvas.Top="2" Click="btnAddExp_Click" ToolTip="Create new donation">
+                    <Canvas Margin="18,10,10,614" >
+                        <Button Height="40" Width="40" Canvas.Left="0" Canvas.Top="2" Click="btnAddExp_Click" ToolTip="Create new Expense">
                             <Button.Background>
-                                <ImageBrush ImageSource="Images/Donate-50.png"/>
+                                <ImageBrush ImageSource="Images/Exp.png"/>
                             </Button.Background>
                         </Button>
-                        <Button Height="40" Width="40" Canvas.Left="42" Canvas.Top="2" Click="EditExp_Click" ToolTip="Edit selected donation">
+                        <Button Height="40" Width="40" Canvas.Left="42" Canvas.Top="2" Click="EditExp_Click" ToolTip="Edit selected Expense">
                             <Button.Background>
                                 <ImageBrush ImageSource="Images/Dedit.png"/>
                             </Button.Background>
                         </Button>
-                        <Button Height="40" Width="40" Canvas.Left="84" Canvas.Top="2" Click="btnDeleteExp_Click" ToolTip="select donation and delete">
+                        <Button Height="40" Width="40" Canvas.Left="84" Canvas.Top="2" Click="btnDeleteExp_Click" ToolTip="select Expense and delete">
                             <Button.Background>
                                 <ImageBrush ImageSource="Images/ddelete.png"/>
                             </Button.Background>
                         </Button>
-                        <Button Height="40" Width="40" Canvas.Left="128" Canvas.Top="2" Name="btnEPrint" Click="btnPrintExp_Click"  ToolTip="select donation for print">
+                        <Button Height="40" Width="40" Canvas.Left="128" Canvas.Top="2" Name="btnEPrint" Click="btnPrintExp_Click"  ToolTip="select Expense for print">
                             <Button.Background>
                                 <ImageBrush ImageSource="Images/print.png"/>
                             </Button.Background>
                         </Button>
+                        <TextBox Height="24" Canvas.Left="655" MaxLength="150" Name="txtExpSearch" TextWrapping="Wrap" Text="" TextChanged="txtExpSearch_TextChanged"  Canvas.Top="14" Width="229"/>
+                        <Button Content="Reset" Canvas.Left="958" Name="btnExpReset" Canvas.Top="14" Height="24" Width="56" Click="btnExpReset_Click"/>
+                        <Label Content="Created   From :" Canvas.Left="210" Canvas.Top="14"/>
+                        <DatePicker Name="dtExpFrom" Canvas.Left="313" Canvas.Top="16" Width="120"/>
+                        <Label Content="To :" Canvas.Left="443" Canvas.Top="14"/>
+                        <DatePicker Name="dtExpTo" Canvas.Left="480" Canvas.Top="16" Width="120"/>
+                        <Button Content="Search" Name="btnExpSearch" Click="btnExpSearch_Click" Height="24" Canvas.Left="898" Canvas.Top="14" Width="54"/>
+                        <Label Content="Name:" Canvas.Left="601" Canvas.Top="14"/>
                     </Canvas>
 
                     <StackPanel Name="AddExpenses" Visibility="Collapsed" Margin="0,0,0,0" Panel.ZIndex="10" >
@@ -289,11 +306,11 @@
 
                                 <DataGrid HorizontalAlignment="Left" Height="521" Margin="0,53,0,0" CanUserAddRows="false" Name="grdRepExpenses" VerticalAlignment="Top" Width="1030" ColumnHeaderHeight="28" RowHeight="28" RowStyle="{StaticResource rowStyle}" CellStyle="{StaticResource cellStyle}"  AutoGenerateColumns="False" AlternatingRowBackground="AliceBlue" BorderThickness="0">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Expense No" Binding="{Binding ID}" />
-                                        <DataGridTextColumn Header="Date" Binding="{Binding Edate}"   />
-                                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                                        <DataGridTextColumn Header="Expense No" Binding="{Binding ExpenseNo}" />
+                                        <DataGridTextColumn Header="Date" Binding="{Binding ExpDate}"   />
+                                        <DataGridTextColumn Header="Name" Binding="{Binding VendorName}" />
                                         <DataGridTextColumn Header="Reason" Binding="{Binding Reason}" />
-                                        <DataGridTextColumn Header="Amount" Binding="{Binding Amount}" />
+                                        <DataGridTextColumn Header="Amount" Binding="{Binding AmountPaid}" />
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <Label Content="Name Contains :" HorizontalAlignment="Left" Margin="331,9,0,0" VerticalAlignment="Top"/>
@@ -337,7 +354,7 @@
                 <Button Content="Add" x:Name="btnAddFund"  HorizontalAlignment="Left" Height="28" Margin="36,11,0,0" VerticalAlignment="Top" Width="75" Click="btnAddFund_Click"/>
                 <Button Content="Edit" x:Name="btnEditFund"  HorizontalAlignment="Left" Height="28" Margin="118,11,0,0" VerticalAlignment="Top" Width="75" Click="btnEditFund_Click"/>
                 <Button Content="Delete" x:Name="btnDeleteFund"  HorizontalAlignment="Left" Height="28" Margin="200,11,0,0" VerticalAlignment="Top" Width="75" Click="btnDeleteFund_Click"/>
-               
+
             </Grid>
             <StackPanel x:Name="stpMisc" Grid.ColumnSpan="2" Margin="162,0,5,2" Visibility="Collapsed">
 
@@ -346,7 +363,7 @@
         <Grid  Name="LoginGrid"  Visibility="Visible">
 
         </Grid>
-       
+
 
         <Canvas Height="248" Margin="330,150,314.6,0" Visibility="Visible">
             <Canvas.Background>
@@ -357,9 +374,9 @@
             </Canvas.Background>
             <Label Content="Login" Canvas.Left="185" Width="77" FontSize="18" FontWeight="Bold" Foreground="White" Canvas.Top="10"/>
             <Label Content="User Name:" HorizontalAlignment="Left" Height="28" Width="93" Foreground="#FFF7ECEC" FontWeight="Bold" Canvas.Left="63" Canvas.Top="67" FontSize="14"/>
-            <TextBox Height="28" Canvas.Left="161" TextWrapping="Wrap"  Canvas.Top="67" Width="216" Name="txtUname" Text="Admin"/>
+            <TextBox Height="28" Canvas.Left="161" TextWrapping="Wrap"  Canvas.Top="67" Width="216" Name="txtUname" Text=""/>
             <Label Content="Password:" HorizontalAlignment="Left" Height="28" Width="93" Foreground="#FFF7ECEC" FontWeight="Bold" Canvas.Left="63" Canvas.Top="114" FontSize="14"/>
-            <PasswordBox Height="28" Canvas.Left="161" PasswordChar="*"  Canvas.Top="114" Width="216" Name="txtPassword" Password="Admin@123" KeyUp="txtPassword_KeyUp"  />
+            <PasswordBox Height="28" Canvas.Left="161" PasswordChar="*"  Canvas.Top="114" Width="216" Name="txtPassword" Password="" KeyUp="txtPassword_KeyUp"  />
             <Button Content="Login" Name="btnLogin"  HorizontalAlignment="Left" Height="28" Width="88" Canvas.Left="289" Canvas.Top="165" FontSize="14" FontWeight="Bold" Click="btnLogin_Click"/>
         </Canvas>
 

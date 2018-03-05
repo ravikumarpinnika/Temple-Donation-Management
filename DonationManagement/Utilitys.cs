@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -102,6 +103,35 @@ namespace DonationManagement
 
             return obj;
 
+        }
+
+      
+    }
+    public static class DateExt
+    {
+        public static string ToSqlLiteDatetime(this DateTime dt)
+        {
+            if (dt != null)
+            {
+                return dt.ToString("yyyy-MM-dd HH:mm:ss");
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        public static DateTime SqlDatetimeToStandard(this string str)
+        {
+            if (str != null)
+            {
+                DateTime dt = DateTime.ParseExact(str, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                return dt;
+            }
+            else
+            {
+                return DateTime.Now;
+            }
         }
     }
 }
