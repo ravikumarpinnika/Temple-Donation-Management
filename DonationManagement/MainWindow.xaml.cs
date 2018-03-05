@@ -494,13 +494,20 @@ namespace DonationManagement
             string excdir = Directory.GetCurrentDirectory() + @"\Templates";
             string tpath = excdir + @"\PrintTemplate.html";
             string imgPath = excdir + @"\Receipt.png";
-            StreamReader sr = new StreamReader(tpath);
-            string html = sr.ReadToEnd();
-            html = html.Replace("@img@", imgPath);
             SelectedItem = grdDonations.SelectedItem as Donation;
             if (SelectedItem != null)
             {
-                html = html.Replace("@ReceiptNo@", Convert.ToString(SelectedItem.ReceiptNo)).Replace("@date@", SelectedItem.Ddate.Substring(0, 9)).Replace("@Name@", SelectedItem.Name)
+                if (SelectedItem.Amount <= 1000)
+                {
+                    tpath = excdir + @"\smallVocher.html";
+                    imgPath = excdir + @"\smallVocher.png";
+                }
+
+                StreamReader sr = new StreamReader(tpath);
+                string html = sr.ReadToEnd();
+                html = html.Replace("@img@", imgPath);
+
+                html = html.Replace("@ReceiptNo@", Convert.ToString(SelectedItem.ReceiptNo)).Replace("@date@", SelectedItem.Ddate.Substring(0, 8)).Replace("@Name@", SelectedItem.Name)
                     .Replace("@AmountWords@", NumberToWords((int)SelectedItem.Amount) + " only").Replace("@DD@", SelectedItem.BTNo).Replace("@Amount@", Convert.ToString(SelectedItem.Amount) + "/-");
                 wb.NavigateToString(html);
                 sr.Close();
@@ -528,7 +535,7 @@ namespace DonationManagement
             DataTable dtd = db.GetDataTable(expenseQuery);
             if (exp != null)
             {
-                html = html.Replace("@ReceiptNo@", Convert.ToString(exp.ExpenseNo)).Replace("@date@", exp.ExpDate.Substring(0, 10)).Replace("@Name@", exp.Reason)
+                html = html.Replace("@ReceiptNo@", Convert.ToString(exp.ExpenseNo)).Replace("@date@", exp.ExpDate.Substring(0, 9)).Replace("@Name@", exp.Reason)
                     .Replace("@AmountWords@", NumberToWords((int)exp.AmountPaid) + " only").Replace("@DD@", exp.TxnRefNo).Replace("@Amount@", Convert.ToString(exp.AmountPaid) + "/-");
                 html = html.Replace("@FUNDTYPE@", GetField(dtd.Rows[0], "FundType"));
                 html = html.Replace("@Bank@", GetField(dtd.Rows[0], "BankName"));
