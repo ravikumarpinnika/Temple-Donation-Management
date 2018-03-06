@@ -315,7 +315,7 @@ namespace DonationManagement
                 txtPassword.Password = "";
                 InitializeConsts();
                 var Logindet = @"INSERT INTO LoginActivity (LoginName,LoginDate)VALUES ('"+ LoginUser.UName + "', datetime('now'));";
-                db.ExecuteNonQuery(Logindet);
+               string ret= db.ExecuteScalar(Logindet);
             }
             else
             {
@@ -392,11 +392,6 @@ namespace DonationManagement
 
             HideStackPanels();
             SplReport.Visibility = Visibility.Visible;
-            //SQLiteDatabase db = new SQLiteDatabase();
-            //string expenseQuery = "Select * from Donations where Created BETWEEN '" + dpRDFrom.Text + " 00:00:00 AM' AND '" + dpRDTo.Text + " 11:59:00 PM' ORDER BY Created DESC";
-            //DataTable dtd = db.GetDataTable(expenseQuery);
-            //List<Donation> lidon = dtd.DataTableToList<Donation>();
-            //grdRepDonations.ItemsSource = lidon;
             btnRDLoad_Click(null, null);
             btnRELoad_Click(null, null);
         }
@@ -437,57 +432,12 @@ namespace DonationManagement
 
         private void BtnExpenseSave_Click(object sender, RoutedEventArgs e)
         {
-            /*   DateTime sd;
-               if (txtExpName.Text == "" || txtExpAmount.Text == "" || txtEReason.Text == "" || dpexpDate.Text == "")
-               {
-                   MessageBox.Show("Please Enter Name,Date, Amount, Reason ");
-                   return;
-               }
-               else if (!DateTime.TryParse(dpexpDate.Text, out sd))
-               {
-                   MessageBox.Show("Please Enter Correct Date (dd/mm/yyyy)");
-                   return;
-               }
-
-               db = new SQLiteDatabase();
-               Expense eobj = new Expense();
-               eobj.AmountPaid = Convert.ToDecimal(txtExpAmount.Text);
-               eobj.VendorName = txtExpName.Text;
-               eobj.ExpDate = dpexpDate.Text;
-               eobj.Reason = txtEReason.Text;
-               eobj.Comments = txtEComment.Text;
-               if (IsExpEdit)
-               {
-                   eobj.Modified = Convert.ToString(DateTime.Now);
-                   eobj.ModifiedBy = LoginUser.UName;
-                   eobj.Created = SelectedExpenseItem.Created;
-                   eobj.CreatedBy = SelectedExpenseItem.CreatedBy;
-                   Dictionary<string, string> dic1 = GetTypePropertyValues<Expense>(eobj);
-                   string s = db.Update("Expenses", dic1, " ID =" + Convert.ToString(SelectedExpenseItem.ID) + "");
-                   db.ExecuteNonQuery(s);
-               }
-               else
-               {
-                   eobj.Created = Convert.ToString(DateTime.Now);
-                   eobj.CreatedBy = LoginUser.UName;
-                   Dictionary<string, string> dic1 = GetTypePropertyValues<Expense>(eobj);
-                   string s = db.Insert("Expenses", dic1);
-                   db.ExecuteNonQuery(s);
-
-               }
-               SelectedExpenseItem = null;
-               IsExpEdit = false;
-               LoadExpenses();
-               FillExpenseForm(new Expense());*/
+           
         }
 
         private void FillExpenseForm(Expense eobj)
         {
-            /* txtExpAmount.Text = Convert.ToString(eobj.AmountPaid);
-             txtExpName.Text = eobj.VendorName;
-             dpexpDate.Text = string.IsNullOrEmpty(eobj.ExpDate) ? DateTime.Now.ToShortDateString() : eobj.ExpDate;
-             txtEReason.Text = eobj.Reason;
-             txtEComment.Text = eobj.Comments;*/
+           
         }
 
         private void btnExpCancel_Click(object sender, RoutedEventArgs e)
@@ -732,12 +682,12 @@ namespace DonationManagement
                 string dtfrom = Convert.ToDateTime(dpREFrom.Text).ToSqlLiteDatetime();
                 string dtto = Convert.ToDateTime(dpRETo.Text + " 23:59:59").ToSqlLiteDatetime();
                 db = new SQLiteDatabase();
-                string expenseQuery = "Select * from EXPENSES where Created BETWEEN '" + dtfrom + "' AND '" + dtto + "' " + (string.IsNullOrEmpty(txtREName.Text) ? "" : "AND Name Like '%" + txtREName.Text + "%'") + " ORDER BY Created DESC";
+                string expenseQuery = "Select * from EXPENSES where Created BETWEEN '" + dtfrom + "' AND '" + dtto + "' " + (string.IsNullOrEmpty(txtREName.Text) ? "" : "AND VendorName Like '%" + txtREName.Text + "%'") + " ORDER BY Created DESC";
                 DataTable dtd = db.GetDataTable(expenseQuery);
                 List<Expense> lidon = dtd.DataTableToList<Expense>();
                 grdRepExpenses.ItemsSource = lidon;
 
-                string countqry = "Select Count(*) as Count,SUM(Amount) as Total from EXPENSES where Created BETWEEN '" + dtfrom + "' AND '" + dtto + "' " + (string.IsNullOrEmpty(txtREName.Text) ? "" : "AND Name Like '%" + txtREName.Text + "%'");
+                string countqry = "Select Count(*) as Count,SUM(Amount) as Total from EXPENSES where Created BETWEEN '" + dtfrom + "' AND '" + dtto + "' " + (string.IsNullOrEmpty(txtREName.Text) ? "" : "AND VendorName Like '%" + txtREName.Text + "%'");
                 DataTable ctd = db.GetDataTable(countqry);
                 if (ctd.Rows.Count > 0)
                 {
@@ -780,22 +730,22 @@ namespace DonationManagement
             string dtfrom = Convert.ToDateTime(dpRCFrom.Text).ToSqlLiteDatetime();
             string dtto = Convert.ToDateTime(dpRCTo.Text + " 23:59:59").ToSqlLiteDatetime();
             db = new SQLiteDatabase();
-            string Query = "Select ID, Edate as Date, Amount from EXPENSES where Created BETWEEN '" + dtfrom + "' AND '" + dtto + "' ORDER BY Created DESC";
-            DataTable dtd = db.GetDataTable(Query);
-            List<ChartData> liexp = dtd.DataTableToList<ChartData>();
-            Query = "Select ReceiptNo, Ddate as Date, Amount from Donations where Created BETWEEN '" + dtfrom + "' AND '" + dtto + "' ORDER BY Created DESC";
+            string Query = "Select ID, ExpDate as Date, AmountPaid as Amount from EXPENSES where Created BETWEEN '" + dtfrom + "' AND '" + dtto + "' ORDER BY Created DESC";
             DataTable dte = db.GetDataTable(Query);
+            List<ChartData> liexp = dte.DataTableToList<ChartData>();
+            Query = "Select ReceiptNo, Ddate as Date, Amount from Donations where Created BETWEEN '" + dtfrom + "' AND '" + dtto + "' ORDER BY Created DESC";
+            DataTable dtd = db.GetDataTable(Query);
             List<ChartData> lidon = dtd.DataTableToList<ChartData>();
 
             Chart crt = new Chart();
             crt.Margin = new Thickness(0, 0, 0, 0);
             PieSeries ls = new PieSeries();
-            ls.IndependentValuePath = "ExpDate";
-            ls.DependentValuePath = "AmountPaid";
+            ls.IndependentValuePath = "Date";
+            ls.DependentValuePath = "Amount";
             ls.ItemsSource = liexp;
             crt.Series.Add(ls);
             PieSeries lsd = new PieSeries();
-            lsd.IndependentValuePath = "Ddate";
+            lsd.IndependentValuePath = "Date";
             lsd.DependentValuePath = "Amount";
             lsd.ItemsSource = lidon;
             crt.Series.Add(lsd);
@@ -806,18 +756,21 @@ namespace DonationManagement
         {
             try
             {
+
+                if (dpRDFrom.Text == "" || dpRDTo.Text == "")
+                {
+                    MessageBox.Show("Please select date");
+                    return;
+                }
+
+                string dtfrom = Convert.ToDateTime(dpRDFrom.Text).ToSqlLiteDatetime();
+                string dtto = Convert.ToDateTime(dpRDTo.Text + " 23:59:59").ToSqlLiteDatetime();
                 db = new SQLiteDatabase();
-
-                string expenseQuery = "Select * from Donations where Created BETWEEN '" + dpRDFrom.Text + " 00:00:00 AM' AND '" + dpRDTo.Text + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtRDName.Text) ? "" : "AND Name Like '%" + txtRDName.Text + "%'") + " ORDER BY Created DESC LIMIT 100";
+                string expenseQuery = "Select * from Donations where Created BETWEEN '" + dtfrom + "' AND '" + dtto + "' " + (string.IsNullOrEmpty(txtRDName.Text) ? "" : "AND VendorName Like '%" + txtRDName.Text + "%'") + " ORDER BY Created DESC";
                 DataTable dtd = db.GetDataTable(expenseQuery);
-
                 List<Donation> ld = db.GetDataList<Donation>(expenseQuery);
-
-
                 List<Donation> lidon = dtd.DataTableToList<Donation>();
-                
-                SaveFileDialog saveFileDialog = new SaveFileDialog();
-                
+                SaveFileDialog saveFileDialog = new SaveFileDialog();     
                 saveFileDialog.FileName = "Donation_" + (new Random(1000)).Next(0, 1000).ToString() + ".csv";
                 saveFileDialog.Filter = "|*.csv";
                 saveFileDialog.DefaultExt = ".csv";
@@ -837,10 +790,16 @@ namespace DonationManagement
         {
             try
             {
+                if (dpREFrom.Text == "" || dpRETo.Text == "")
+                {
+                    MessageBox.Show("Please select date");
+                    return;
+                }
+
+                string dtfrom = Convert.ToDateTime(dpREFrom.Text).ToSqlLiteDatetime();
+                string dtto = Convert.ToDateTime(dpRETo.Text + " 23:59:59").ToSqlLiteDatetime();
                 db = new SQLiteDatabase();
-
-                string expenseQuery = "Select * from EXPENSES where Created BETWEEN '" + dpREFrom.Text + " 00:00:00 AM' AND '" + dpRETo.Text + " 11:59:00 PM' " + (string.IsNullOrEmpty(txtREName.Text) ? "" : "AND Name Like '%" + txtREName.Text + "%'") + " ORDER BY Created DESC  LIMIT 100";
-
+                string expenseQuery = "Select * from EXPENSES where Created BETWEEN '" + dtfrom + "' AND '" + dtto + "' " + (string.IsNullOrEmpty(txtREName.Text) ? "" : "AND VendorName Like '%" + txtREName.Text + "%'") + " ORDER BY Created DESC";
                 DataTable dtd = db.GetDataTable(expenseQuery);
                 List<Expense> lidon = dtd.DataTableToList<Expense>();
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
@@ -1172,7 +1131,7 @@ namespace DonationManagement
                 string dtfrom = Convert.ToDateTime(dtExpFrom.Text).ToSqlLiteDatetime();
                 string dtto = Convert.ToDateTime(dtExpTo.Text + " 23:59:59").ToSqlLiteDatetime();
                 SQLiteDatabase db = new SQLiteDatabase();
-                string expenseQuery = "Select * from EXPENSES where Created BETWEEN '" + dtfrom + "' AND '" + dtto + "' " + (string.IsNullOrEmpty(txtExpSearch.Text) ? "" : "AND Name Like '%" + txtExpSearch.Text + "%'") + " ORDER BY Created DESC";
+                string expenseQuery = "Select * from EXPENSES where Created BETWEEN '" + dtfrom + "' AND '" + dtto + "' " + (string.IsNullOrEmpty(txtExpSearch.Text) ? "" : "AND VendorName Like '%" + txtExpSearch.Text + "%'") + " ORDER BY Created DESC";
                 DataTable dtd = db.GetDataTable(expenseQuery);
                 List<Expense> liexp = dtd.DataTableToList<Expense>();
                 grdExpenses.ItemsSource = liexp;
