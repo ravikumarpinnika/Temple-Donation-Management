@@ -776,7 +776,7 @@ namespace DonationManagement
                 saveFileDialog.DefaultExt = ".csv";
                 if (saveFileDialog.ShowDialog() == true)
                 {
-                    Utility.CreateCSVFromGenericList<Donation>(lidon,  "c:\\"+saveFileDialog.FileName);
+                    Utility.CreateCSVFromGenericList<Donation>(lidon,  saveFileDialog.FileName);
                 }
             }
             catch (Exception ex)
@@ -807,7 +807,7 @@ namespace DonationManagement
                 saveFileDialog.DefaultExt = ".csv";
                 if (saveFileDialog.ShowDialog() == true)
                 {
-                    Utility.CreateCSVFromGenericList<Expense>(lidon, "c:\\"+saveFileDialog.FileName);
+                    Utility.CreateCSVFromGenericList<Expense>(lidon, saveFileDialog.FileName);
                 }
             }
             catch (Exception ex)
